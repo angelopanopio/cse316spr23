@@ -7,8 +7,8 @@ export default function getMetaData(startTime, date, isAnswer)
 
     date = new Date(date);
     
-    console.log(startTime)
-    console.log(date);
+   //console.log(startTime)
+    //console.log(date);
       
     let timeDiffSecs  = timeDiff / 1000;
     let strOut = "";
@@ -151,7 +151,7 @@ export function  getQuestionActive(questions, allAnswers){
       //console.log(bb);
       let aa = sortAnsIds(a.answers, allAnswers)[0]; //bb is an ansid
       aa = new Date(allAnswers.find(function(element){return element._id === aa}).ans_date_time);
-      console.log(aa);
+      //console.log(aa);
       return new Date(bb) - new Date(aa);
   });
   

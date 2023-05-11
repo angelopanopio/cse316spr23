@@ -14,11 +14,14 @@ const QuestionSchema = new Schema({
     },
     tags :  [{type: Schema.Types.ObjectId, ref: "Tag", required: true }],
     answers: [{type: Schema.Types.ObjectId, ref: "Answer" }],
+    comments: [{type: Schema.Types.ObjectId, ref: "Comment" }],
     asked_by: {
         type: String,
         default: 'Anonymous'
     },
-    ask_date_time:{
+
+    ask_date_time :
+    {
         type: Date,
         default: Date.now
     },
@@ -26,6 +29,12 @@ const QuestionSchema = new Schema({
         type: Number,
         default: 0
     },
+    votes: {
+        type: Number,
+        default: 0
+    },
+
+    author_id: {type: Schema.Types.ObjectId, ref: "User" , required: true},
     url: String
     });
 

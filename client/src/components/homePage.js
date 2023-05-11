@@ -8,10 +8,32 @@ import {getQuestionNewest, getQuestionActive} from './utils.js';
 
 export default function HomePage(props) {
     const current_questions = props.questionList;
-    //console.log(current_questions);
-    //const [sort, sortBy] = useState("newest");
+
     const [sortQuestions, modifyQuestion] = useState(current_questions); //not updating?
     const [allAnswers, setAllAnswers] = useState();
+
+    const [question_page_arr, setQuestion_page_arr] = useState([]);
+
+
+
+    useEffect(() => {
+        if (sortQuestions) {
+          let tmp = [];
+          for (let i = 0; i < sortQuestions.length; i += 5) {
+            let chunk = sortQuestions.slice(i, i + 5);
+            console.log(chunk);
+            tmp = [...tmp, chunk];
+          }
+          
+          console.log(tmp);
+          setQuestion_page_arr(tmp);
+        }
+    }, [sortQuestions]);
+
+    const [curr_question_page_index, setCurr_question_page_index] = useState(0);
+
+    console.log(question_page_arr);
+    console.log(curr_question_page_index);
 
       // useEffect hook to update the sortQuestions state whenever the questionList prop is changed.
 
@@ -32,6 +54,8 @@ export default function HomePage(props) {
         console.log(error);
       });
       }, []);
+
+
 
 
     function updateQuestions(status, questions){
@@ -59,6 +83,7 @@ export default function HomePage(props) {
             }
             modifyQuestion(questionsWithNoAnswers);
         }
+        setCurr_question_page_index(0);
     }
 
     return (
@@ -79,7 +104,29 @@ export default function HomePage(props) {
             </div>
         </div>
 
-        <ShowQuestions questions={sortQuestions} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
+        <ShowQuestions questions={question_page_arr?.length > 0 && question_page_arr[curr_question_page_index]} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
+        <div className="questionsPrevAndNextButton">
+          <button className="questionsPrevButton" onClick={ () => {
+                                      if (curr_question_page_index == 0){
+                                        // do nothin
+                                      }
+                                      else 
+                                      {
+                                        setCurr_question_page_index(curr_question_page_index - 1);
+                                      }
+                                  }}> Prev</button>
+          <button className="questionsNextButton" onClick={ () => {
+                                      if (curr_question_page_index == question_page_arr.length - 1){
+                                        setCurr_question_page_index(0);
+
+                                      }
+                                      else 
+                                      {
+                                        setCurr_question_page_index(curr_question_page_index + 1);
+
+                                      }
+                                  }}> Next</button>
+        </div>
     </div>
     );
   }
@@ -87,7 +134,7 @@ export default function HomePage(props) {
 
   function ShowQuestions(props){ //can only return one tag
     //console.log(props);
-    //console.log(props.questions);
+    console.log(props.questions);
     let allQuestions = props.questions;
     let startTime = Date.now();
 

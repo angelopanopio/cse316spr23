@@ -86,6 +86,7 @@ function ShowAnswers(props) {
     let startTime = Date.now();
     let isAnswer = true;
     let answersArr = getAnswersListNewest(props.question, props.allAnswers);
+    console.log(answersArr);
 
     return (
         <div>
