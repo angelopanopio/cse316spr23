@@ -69,10 +69,11 @@ function answerCreate(text, ans_by, ans_date_time, comments, author_id) {
   return answer.save();
 }
 
-function questionCreate(title, text, tags, answers, comments, asked_by, ask_date_time, views, votes, author_id) {
+function questionCreate(title, text, summary, tags, answers, comments, asked_by, ask_date_time, views, votes, author_id) {
   qstndetail = {
     title: title,
     text: text,
+    summary: summary,
     tags: tags,
     asked_by: asked_by,
     author_id : author_id
@@ -118,14 +119,14 @@ const populate = async () => {
   u3.username, false, false, u3);
 
   await questionCreate('Programmatically navigate using React router', 'the alert shows the proper index for the li clicked, and when I alert the variable within the last function I\'m calling, moveToNextImage(stepClicked), the same value shows but the animation isn\'t happening. This works many other ways, but I\'m trying to pass the index value of the list item clicked to use for the math to calculate.', 
-  [t1, t2], [a1, a2], false, u2.username , false, false, 5, u2);
+  'animation not working', [t1, t2], [a1, a2], false, u2.username , false, false, 5, u2);
   await questionCreate('android studio save string shared preference, start activity and load the saved string', 'I am using bottom navigation view but am using custom navigation, so my fragments are not recreated every time i switch to a different view. I just hide/show my fragments depending on the icon selected. The problem i am facing is that whenever a config change happens (dark/light theme), my app crashes. I have 2 fragments in this activity and the below code is what i am using to refrain them from being recreated.',
-   [t3, t4, t2], [a3, a4, a5], false, u3.username, false, 121, 7, u3);
-  await questionCreate('testing1', 'testing1', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u4.username, false, 5, false, u4);
-  await questionCreate('testing2', 'testing2', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u3.username, false, 5, false, u3);
-  await questionCreate('testing3', 'testing3', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
-  await questionCreate('testing4', 'testing4', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
-  await questionCreate('testing4', 'testing4', [t3], false, false, u2.username, false, 5, false, u2);
+  'app crashing', [t3, t4, t2], [a3, a4, a5], false, u3.username, false, 121, 7, u3);
+  await questionCreate('testing1', 'testing1', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u4.username, false, 5, false, u4);
+  await questionCreate('testing2', 'testing2', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u3.username, false, 5, false, u3);
+  await questionCreate('testing3', 'testing3', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
+  await questionCreate('testing4', 'testing4', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
+  await questionCreate('testing4', 'testing4', 'summary', [t3], false, false, u2.username, false, 5, false, u2);
   if(db) db.close();
   console.log('done');
 }
