@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useState } from "react";
 
 export default function RegisterPage(props) {
+    let {setClicked} = props;
+
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
@@ -21,7 +23,7 @@ export default function RegisterPage(props) {
             }
             try {
                 await axios.post("http://localhost:8000/registerUser", user);
-                props.setClicked("LoginPage");
+                setClicked("LoginPage");
             } catch (error) {
                 console.log(error.response.data.message);
                 errorMessage = error.response.data.message;
@@ -43,6 +45,7 @@ export default function RegisterPage(props) {
     }
     return (
         <form id="add-new-user" target="_blank" method="post">
+            <button onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
             <div id="new-user" className="error-messages-container">
                 <span id="new-user-error-messages">{error}</span>
             </div>

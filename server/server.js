@@ -251,7 +251,7 @@ app.post("/login", async (req, res) => {
   try {
     const user = await userTable.findOne({ email });
     if (!user) {
-      return res.status(401).send({ message: "Invalid email or password" });
+      return res.status(401).send({ message: "Email not registered!" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);

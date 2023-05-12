@@ -3,10 +3,11 @@ import axios from 'axios'
 import { useState } from "react";
 
 export default function LoginPage(props) {
-    
+    let {setClicked, setIsLoggedIn} = props;
+
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
-    let [error, setError] = useState("");
+    const [error, setError] = useState("");
     
     async function handleLogin(event){
         let errorMessage = "";
@@ -20,8 +21,8 @@ export default function LoginPage(props) {
             }
             try {
                 await axios.post("http://localhost:8000/login", login);
-                props.setIsLoggedIn(true);
-                props.setClicked("HomePage");
+                setIsLoggedIn(true);
+                setClicked("HomePage");
             } catch (error) {
                 console.log(error.response.data.message);
                 errorMessage = error.response.data.message;
@@ -37,6 +38,7 @@ export default function LoginPage(props) {
     }
     return (
         <form id="login-Form" method="post">
+            <button onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
             <div className="login-Form-error-messages-container">
                 <span id = "login-Form-error-messages">{error}</span>
             </div>
