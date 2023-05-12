@@ -17,6 +17,8 @@ export default function App() {
   const [allQuestionsTitle, setAllQuestionsTitle] = useState(""); //use this to set the title
   const [clicked, setClicked] = useState("WelcomePage"); //state for changing Pages
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState("");
+
 
   useEffect(() => {
   axios.get('http://localhost:8000/getAllQuestions')
@@ -65,7 +67,7 @@ export default function App() {
         )}
       </div>}
       {isLoggedIn && questionList && <div className="bodyContent"> 
-        <Banner questionList = {questionList} setQuestionList = {setQuestionList}
+        <Banner isLoggedIn = {isLoggedIn} setIsLoggedIn = {setIsLoggedIn}questionList = {questionList} setQuestionList = {setQuestionList}
         allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
         clicked={clicked} setClicked={setClicked}/>
         <Body questionList = {questionList} setQuestionList = {setQuestionList}

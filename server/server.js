@@ -259,7 +259,8 @@ app.post("/login", async (req, res) => {
       return res.status(401).send({ message: "Invalid email or password" });
     }
 
-    req.session.userId = user.id;
+    session.userId = user.id;
+    session.username = user.username;
     res.send({ message: "Successfully logged in!" });
   } catch (error) {
     console.error(error);
@@ -268,5 +269,23 @@ app.post("/login", async (req, res) => {
 });
 
 
+
+// check log in
+app.get('/checkLoggedIn', (req, res) => {
+  // Check if user is logged in, e.g. by verifying a session or token
+  if (session.username) {
+    // If user is logged in, return the username or other user data as JSON
+    res.json(session.username);
+  } else {
+    // If user is not logged in, return an error status code and message
+    res.status(401).json({ error: 'User not logged in' });
+  }
+});
+
+app.get("/logout", async (req, res) => {
+  session.userId = null
+  session.username = null
+  res.send("logged out")
+})
 
 

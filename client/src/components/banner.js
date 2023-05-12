@@ -1,10 +1,11 @@
-//import Model from '../models/model.js';
-//import { useState } from "react";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SearchBar from './searchBar.js';
 
 export default function Banner(props) {
   const {
+    isLoggedIn, 
+    setIsLoggedIn,
     questionList,
     setQuestionList,
     allQuestionsTitle,
@@ -12,23 +13,47 @@ export default function Banner(props) {
     clicked,
     setClicked
   } = props;
+
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/checkLoggedIn')
+      .then(res => {
+        setUser(res.data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const handleLogout = () => {
+    axios.get('http://localhost:8000/logout')
+      .then(res => {
+        setUser('');
+        setIsLoggedIn(false);
+        setClicked("WelcomePage");
+      })
+      .catch(err => console.error(err));
+  };
+
   return (
-  <div className="header">
-
+    <div className="header">
       <div className="emptyHeader"> </div>
-      <div className = "headerDetails">
-      <div className="pageTitle"> Fake Stack OverFlow </div>
-      <SearchBar  questionList = {questionList} setQuestionList = {setQuestionList}
-      allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
-      clicked={clicked} setClicked={setClicked}/>
+      <div className="headerDetails">
+        <div className="pageTitle">Fake Stack OverFlow</div>
+        <div className="user">
+          Welcome, {user}
+          {user &&
+            <button onClick={handleLogout} style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold', padding: '10px' }}>Logout</button>
+          }
+        </div>
+        <SearchBar 
+          questionList={questionList} 
+          setQuestionList={setQuestionList}
+          allQuestionsTitle={allQuestionsTitle} 
+          setAllQuestionsTitle={setAllQuestionsTitle} 
+          clicked={clicked} 
+          setClicked={setClicked}
+        />
       </div>
-
-  </div>
+    </div>
   );
 }
-
-/**
- * <SearchBar db = {db} updateDB={updateDB} questionList = {questionList} setQuestionList = {setQuestionList}
-      allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
-      clicked={clicked} setClicked={setClicked}/>
- */
