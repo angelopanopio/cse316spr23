@@ -268,11 +268,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
+// guest log in
+app.post("/loginGuest", async (req, res) => {
+  session.userId = 0;
+  session.username = "Guest";
+  res.send({ message: "Successfully logged in!" });
+});
 
 // check log in
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
+  console.log(session);
   if (session.username) {
     // If user is logged in, return the username or other user data as JSON
     res.json(session.username);

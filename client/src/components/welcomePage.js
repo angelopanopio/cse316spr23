@@ -1,6 +1,15 @@
+import axios from 'axios';
+import React from 'react';
+
 export default function WelcomePage(props) {
     let {setClicked, setIsLoggedIn} = props;
-    const handleGuestLogin = () => {
+    async function handleGuestLogin() {
+
+        try {
+            await axios.post("http://localhost:8000/loginGuest");
+        } catch (error) {
+            console.log(error.response.data.message);
+        }
         setIsLoggedIn(true);
         setClicked("HomePage");
     }
