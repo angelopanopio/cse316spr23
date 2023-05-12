@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended: true}));
 var answerTable = require('./models/answers.js');
 var questionTable = require('./models/questions.js');
 var tagTable = require('./models/tags.js');
+var userTable = require('./models/user.js');
 
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017/fake_so";
@@ -207,6 +208,27 @@ app.post('/update_questions',async (req,res)=>{
     console.log(error);
     res.sendStatus(500);
     return;
+  }
+});
+
+//register new user
+app.post('/registerUser', async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    const user = await userTable.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+    const newUser = new userTable({
+      username: req.body.username,
+      password: req.body.password,
+      email: req.body.email
+    });
+    await newUser.save();
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
   }
 });
 

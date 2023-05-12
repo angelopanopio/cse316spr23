@@ -4,10 +4,12 @@ import './stylesheets/App.css';
 //import FakeStackOverflow from './components/fakestackoverflow.js'
 import Banner from './components/banner';
 import Body from './components/body';
+import welcomePage from './components/welcomePage';
 // import Model from './models/model';
 import { useState, useEffect } from "react";
 import React from 'react';
 import axios from 'axios';
+import WelcomePage from './components/welcomePage';
 
 export default function App() {
   const [questionList, setQuestionList] = useState(); //state changing shown questions
@@ -50,13 +52,18 @@ export default function App() {
   
   //dont need db
   return (
+    
     <section className="fakeso">
-      {questionList && <Banner questionList = {questionList} setQuestionList = {setQuestionList}
-      allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
-      clicked={clicked} setClicked={setClicked}/>}
-      {questionList && <Body questionList = {questionList} setQuestionList = {setQuestionList}
+      {questionList && <WelcomePage questionList = {questionList} setQuestionList = {setQuestionList}
       allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
       clicked={clicked} setClicked={setClicked}/>}
     </section>
   );
 }
+ /**{questionList && <Banner questionList = {questionList} setQuestionList = {setQuestionList}
+      allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
+      clicked={clicked} setClicked={setClicked}/>}
+      {questionList && <Body questionList = {questionList} setQuestionList = {setQuestionList}
+      allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
+      clicked={clicked} setClicked={setClicked}/>}
+      **/
