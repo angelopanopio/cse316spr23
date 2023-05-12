@@ -1,17 +1,16 @@
 import React from 'react'
 import axios from 'axios'
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function RegisterPage(props) {
-    let {questionList, setQuestionList, allQuestionsTitle, setAllQuestionsTitle, clicked, setClicked} = props;
-
-
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
     const [confirmpwd, setConfimPwd] = useState("");
     let [error, setError] = useState("");
-    async function handleCreateNewUser(){
+
+    async function handleCreateNewUser(event){
+        event.preventDefault();
         let errorMessage = "";
         const emailRegex = /\w+@\w+.\w+/
         if(emailRegex.exec(email) && username.length < 15 && username.length !== 0 && pwd.length > 0 && pwd === confirmpwd && !email.includes(pwd)) {
@@ -21,7 +20,7 @@ export default function RegisterPage(props) {
                 email: email
             }
             try {
-                let res = await axios.post("http://localhost:8000/registerUser", user);
+                await axios.post("http://localhost:8000/registerUser", user);
                 props.setClicked("LoginPage");
             } catch (error) {
                 console.log(error.response.data.message);
@@ -59,7 +58,7 @@ export default function RegisterPage(props) {
             <h1>Confirm password</h1>
             <input type="password" name="password-confirm" id="new-user-password-confirm"  onChange={(e) => setConfimPwd(e.target.value)}/><br /><br />
 
-            <input type="button" id="new-user-submit" onClick={handleCreateNewUser} value="Create user" />
+            <input type="button" id="new-user-submit" onClick={(event) => handleCreateNewUser(event)} value="Create user" />
         </form>
 
     )

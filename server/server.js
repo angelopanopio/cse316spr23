@@ -5,14 +5,26 @@
 let userArgs = process.argv.slice(2)
 
 const express = require("express")
+const session = require("express-session")
+
 const app = express()
 const port = 8000
 const cors = require("cors")
 
+const bcrypt = require("bcrypt")
 // Use the cors middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+  })
+);
 
 
 var answerTable = require('./models/answers.js');
@@ -231,6 +243,30 @@ app.post('/registerUser', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// handle login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userTable.findOne({ email });
+    if (!user) {
+      return res.status(401).send({ message: "Invalid email or password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({ message: "Invalid email or password" });
+    }
+
+    req.session.userId = user.id;
+    res.send({ message: "Successfully logged in!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "An error occurred while logging in" });
+  }
+});
+
 
 
 
