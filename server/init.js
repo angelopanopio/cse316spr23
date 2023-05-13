@@ -2,7 +2,7 @@
 // Include an admin user.
 // Script should take admin credentials as arguments as described in the requirements doc.
 
-//Ex run: node populate_db.js mongodb://127.0.0.1:27017/fake_so admin password]
+//Ex run: node init.js mongodb://127.0.0.1:27017/fake_so admin password
 
 
 let userArgs = process.argv.slice(2);
@@ -46,22 +46,24 @@ function tagCreate(name, users_using_tag) {
   return tag.save();
 }
 
-function commentCreate(comment_by, text, votes) {
+function commentCreate(comment_by, text, votes, comment_date_time) {
     let comment = new Comment({ 
         comment_by : comment_by,
         text : text,
     });
 
     if (votes != false) comment.votes = votes;
+    if (comment_date_time != false) comment.comment_date_time = comment_date_time;
     return comment.save();
   }
 
-function answerCreate(text, ans_by, ans_date_time, comments, author_id) {
+function answerCreate(text, ans_by, ans_date_time, comments, votes, author_id) {
   answerdetail = {text:text};
   if (ans_by != false) answerdetail.ans_by = ans_by;
   if (ans_date_time != false) answerdetail.ans_date_time = ans_date_time;
   
   if (comments != false) answerdetail.comments = comments;
+  if (votes != false) answerdetail.votes = votes;
   if (author_id != false) answerdetail.author_id = author_id;
 
 
@@ -99,24 +101,24 @@ const populate = async () => {
   let t3 = await tagCreate('android-studio', [u3, u4]);
   let t4 = await tagCreate('shared-preferences', [u3]);
 
-  let c1 = await commentCreate(u2.username, 'testing', 5);
-  let c2 = await commentCreate(u3.username, 'noice', 1);
-  let c3 = await commentCreate(u4.username, 'pogchamp', false);
-  let c4 = await commentCreate(u4.username, 'poggers]', false);
+  let c1 = await commentCreate(u2.username, 'testing', 5, false);
+  let c2 = await commentCreate(u3.username, 'noice', 1, false);
+  let c3 = await commentCreate(u4.username, 'pogchamp', false, false);
+  let c4 = await commentCreate(u4.username, 'poggers]', false, false);
 
   let a1 = await answerCreate('React Router is mostly a wrapper around the history library. history handles interaction with the browser\'s window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don\'t have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.',
-   u2.username, false, false, u2);
+   u2.username, false, false, false, u2);
   let a2 = await answerCreate('On my end, I like to have a single history object that I can carry even outside components. I like to have a single history.js file that I import on demand, and just manipulate it. You just have to change BrowserRouter to Router, and specify the history prop. This doesn\'t change anything for you, except that you have your own history object that you can manipulate as you want. You need to install history, the library used by react-router.',
-   u3.username, false, false, u3);
+   u3.username, false, false, 1, u3);
   let a3 = await answerCreate('Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background.',
-   u4.username, false, false, u4);
+   u4.username, false, false, 2, u4);
   let a4 = await answerCreate('YourPreference yourPrefrence = YourPreference.getInstance(context); yourPreference.saveData(YOUR_KEY,YOUR_VALUE);',
-  u2.username, false, false, u2);
+  u2.username, false, false, 3,u2);
   let a5 = await answerCreate('I just found all the above examples just too confusing, so I wrote my own. ',
-  u3.username, false, false, u3);
+  u3.username, false, false, 4, u3);
 
   let a6 = await answerCreate('test',
-  u3.username, false, false, u3);
+  u3.username, false, false, 5, u3);
 
   await questionCreate('Programmatically navigate using React router', 'the alert shows the proper index for the li clicked, and when I alert the variable within the last function I\'m calling, moveToNextImage(stepClicked), the same value shows but the animation isn\'t happening. This works many other ways, but I\'m trying to pass the index value of the list item clicked to use for the math to calculate.', 
   'animation not working', [t1, t2], [a1, a2], false, u2.username , false, false, 5, u2);
@@ -126,7 +128,7 @@ const populate = async () => {
   await questionCreate('testing2', 'testing2', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u3.username, false, 5, false, u3);
   await questionCreate('testing3', 'testing3', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
   await questionCreate('testing4', 'testing4', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
-  await questionCreate('testing4', 'testing4', 'summary', [t3], false, false, u2.username, false, 5, false, u2);
+  await questionCreate('testing5', 'testing5', 'summary', [t3], false, false, u2.username, false, 5, false, u2);
   if(db) db.close();
   console.log('done');
 }

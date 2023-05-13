@@ -18,6 +18,8 @@ app.use(express.urlencoded({extended: true}));
 var answerTable = require('./models/answers.js');
 var questionTable = require('./models/questions.js');
 var tagTable = require('./models/tags.js');
+var commentTable = require('./models/comments.js');
+var userTable = require('./models/user.js');
 
 const { MongoClient } = require("mongodb");
 const uri = "mongodb://localhost:27017/fake_so";
@@ -76,6 +78,7 @@ app.get('/getAllTags', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 //sends an array of questions to client
 app.get('/getAllAnswers', async (req, res) => {
   //console.log(await questionTable.find({}))
@@ -88,6 +91,8 @@ app.get('/getAllAnswers', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+
 
 // gets Tag object given a tid
 app.get('/getTagBytid/:tid', async (req, res) => {
@@ -104,7 +109,7 @@ app.get('/getTagBytid/:tid', async (req, res) => {
 
 
 
-//increment num of view for a question id
+//increment num of view for a question id, returns question
 app.post('/increaseView/:id', async (req, res) => {
   try{
     let id = req.params.id;
@@ -126,6 +131,156 @@ app.post('/increaseView/:id', async (req, res) => {
     res.sendStatus(500);
   }
   });
+
+// increment or decrement for a question id, returns updated votes
+app.post('/voteQuestion/:num/:id', async (req, res) => {
+  try{
+    let num = parseInt(req.params.num);
+    let id = req.params.id;
+    console.log(num);
+    //console.log("increaseView");
+    //console.log(id);
+
+    const query = { _id: id};
+    const update = { $inc: { votes: num } };
+
+    await questionTable.updateOne(
+      query,
+      update
+   );
+   res.send(await questionTable.find({_id: id}, "votes"));
+   
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+  });
+
+
+// increment or decrement for a answer id, returns updated votes
+app.post('/voteAnswer/:num/:id', async (req, res) => {
+  try{
+    let num = parseInt(req.params.num);
+    let id = req.params.id;
+    console.log(num);
+    //console.log("increaseView");
+    //console.log(id);
+
+    const query = { _id: id};
+    const update = { $inc: { votes: num } };
+
+    await answerTable.updateOne(
+      query,
+      update
+    );
+    res.send(await answerTable.find({_id: id}, "votes"));
+    
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+  });
+
+// increment or decrement for a answer id, returns updated votes
+app.post('/voteComment/:num/:id', async (req, res) => {
+  try{
+    let num = parseInt(req.params.num);
+    let id = req.params.id;
+    console.log(num);
+    //console.log("increaseView");
+    //console.log(id);
+
+    const query = { _id: id};
+    const update = { $inc: { votes: num } };
+
+    await commentTable.updateOne(
+      query,
+      update
+    );
+    res.send(await commentTable.find({_id: id}));
+    
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+  });
+
+// gets comment object given a comment id
+app.get('/getCommentById/:id', async (req, res) => {
+  try{
+    let id = req.params.id;
+    //console.log(tid);
+    res.send(await commentTable.find({_id: id}));
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+//given an arrary of comment object ids, return an array of comment objects
+app.post('/getCommentArray', async (req, res) => {
+  try{
+    let arr = req.body;
+    let comments = [];
+    //console.log(arr);
+    for(let i = 0; i < arr.length; i++){
+      console.log(await commentTable.find({_id: arr[i]}));
+      comments.push(await commentTable.find({_id: arr[i]}));
+    }
+    //console.log(comments);
+    res.send(comments);
+  }
+  catch(error){
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+//add a new comment and return its id
+app.post('/comment_add_id', async(req,res)=>{
+  try{
+    let comment = req.body;
+    let date = new Date();
+    //console.log(comment);
+    let new_comment = new commentTable({
+      comment_by: comment["comment_by"],
+      text: comment["text"],
+      comment_date_time: date
+    });
+    await new_comment.save();
+    res.json(new_comment["_id"]);
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+// add comment id to the question and return updated question
+app.post('/comment_update_qid', async(req,res)=>{
+  try{
+    let data=req.body;
+    //console.log(data);
+
+    const query = { _id: data["qid"]};
+    const update = { $push: { comments: data["comment_id"]} };
+
+    await questionTable.updateOne(
+      query,
+      update
+   );
+
+   res.send(await questionTable.find({_id: data["qid"]}));
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
 
 //add a new answer and return its id
 app.post('/answers_add_aid', async(req,res)=>{

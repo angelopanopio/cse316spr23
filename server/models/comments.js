@@ -17,6 +17,10 @@ const CommentSchema = new Schema({
         type: Number,
         default: 0
     },
+    comment_date_time:{
+        type: Date,
+        default: Date.now()
+    },
     url: String
     });
 

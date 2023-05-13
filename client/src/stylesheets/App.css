@@ -134,6 +134,24 @@
     
 }
 
+.questionsPrevAndNextButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem 5rem 2rem 5rem;
+}
+
+.questionsPrevButton{
+    font-size: 3rem; 
+    background-color: lightcoral;
+}
+
+.questionsNextButton{
+    font-size: 3rem; 
+    background-color: lightgreen
+}
+
+
 .newest{
     font-size: 2.5rem;
     background-color: white;
@@ -219,6 +237,11 @@
     padding: .8rem;
     margin-right: .75rem;
 }
+
+.questionSummary{
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+}
 .metadataContainer{
     
     display: flex;
@@ -267,6 +290,7 @@
     flex-direction: row;
     padding: 2rem 5rem 2rem 5rem;
     border-bottom: dotted;
+    justify-content: space-around;
     
 }
 
@@ -279,19 +303,55 @@
     
 }
 
+.answersPage_MandatoryFields{
+    font-size: 1rem;
+    color:red;
+}
+.commentsPrevButton{
+    font-size: 1rem; 
+    background-color: lightcoral;
+}
+
+.commentsNextButton{
+    font-size: 1rem; 
+    background-color: lightgreen;
+}
+
+.answersPage_QuestionTextAndComments{
+    display:flex;
+    flex-direction: column;
+    width: 90%;
+}
 .answersPage_QuestionText{
     font-size: 1.5rem;
     width: 100%;
     
 }
+.QuestionCommentsContainer{
+    display:flex;
+    flex-direction: column;
+}
+
+.questionPage_CommentContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around; 
+    font-size: 1rem;
+}
+
+
+.questionPage_votes{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
 
 .answersPage_AuthorMetadataContainer{
     display: flex;
     flex-direction: column;
+    text-align: center;
     font-size: 1.5rem;
     width: 30rem;
-    
-
 }
 
 .answersPage_Author{
@@ -301,6 +361,8 @@
 .answersPage_AuthorMetadata{
     color: lightgray;
 }
+
+
 
 
 .answersPage_AnswerContainer{
@@ -313,7 +375,7 @@
 }
 
 .answersPage_AnswerText{
-    font-size: 1.5rem;
+    font-size: 2rem;
     width: 80%;
     padding-right: 5rem;
 }
@@ -322,7 +384,7 @@
     display: flex;
     flex-direction: column;
     font-size: 1.5rem;
-    
+    text-align: center;
     width: 22rem;
 }
 
@@ -334,14 +396,40 @@
     color:lightgrey;
 }
 
+.answersPage_QuestionButtonAndPrevNextButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 5rem 2rem 5rem;
+}
+
 .answersPage_AnswerQuestionButton{
-    font-size: 2.5rem;
+    font-size: 3rem;
     background-color: rgb(53, 138, 198);
     color: white;
-    border: black;
     width: 30rem;
-    padding: 2rem 5rem 2rem 5rem;
+    border-color: black;
     margin:2rem 5rem 2rem 5rem;
+}
+.answerPrevButton{
+    font-size: 3rem;
+    background-color: lightcoral;
+}
+
+.answersNextButton{
+    font-size: 3rem;
+    background-color: lightgreen;
+}
+
+.answerPage_upvote{
+    font-size: 1.5rem;
+    background-color: lightgreen;
+}
+
+.answerPage_downvote{
+    font-size: 1.5rem;
+    background-color: lightcoral;
 }
 
 /* Ask Question Page */

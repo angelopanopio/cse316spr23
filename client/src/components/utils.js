@@ -125,6 +125,12 @@ export function getAnswerNewest(arr){
   });
 }
 
+export function getCommentNewest(arr){
+  return arr.sort(function(a,b){
+    return new Date(b.comment_date_time) - new Date(a.comment_date_time);
+  });
+}
+
 // return array of all questions in the model sorted by answer activity. The most recently answered questions must appear first.
 // im not sure if this even works, need more testing lol
 export function  getQuestionActive(questions, allAnswers){
