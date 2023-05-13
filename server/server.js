@@ -145,23 +145,42 @@ app.post('/increaseView/:id', async (req, res) => {
   }
   });
 
-// increment or decrement for a question id, returns updated votes
-app.post('/voteQuestion/:num/:id', async (req, res) => {
+// increment or decrement for a question id, increments/decrements reputation, returns updated votes
+app.post('/voteQuestion/:num/:qid', async (req, res) => {
   try{
     let num = parseInt(req.params.num);
-    let id = req.params.id;
+    let qid = req.params.qid;
     console.log(num);
     //console.log("increaseView");
     //console.log(id);
 
-    const query = { _id: id};
-    const update = { $inc: { votes: num } };
+    let query = { _id: qid};
+    let update = { $inc: { votes: num } };
 
     await questionTable.updateOne(
       query,
       update
    );
-   res.send(await questionTable.find({_id: id}, "votes"));
+
+  let uid = await questionTable.find({_id: qid}, "author_id");
+
+  uid = uid[0].author_id;
+
+
+  query = { _id: uid};
+  if(num == -1){
+    update = { $inc: { reputation: -10 } };
+  }
+  else{
+    update = { $inc: { reputation: 5 } };
+  }
+
+  await userTable.updateOne(
+     query,
+     update
+  );
+   
+   res.send(await questionTable.find({_id: qid}, "votes"));
    
   }
   catch(error){
@@ -180,13 +199,33 @@ app.post('/voteAnswer/:num/:id', async (req, res) => {
     //console.log("increaseView");
     //console.log(id);
 
-    const query = { _id: id};
-    const update = { $inc: { votes: num } };
+    let query = { _id: id};
+    let update = { $inc: { votes: num } };
 
     await answerTable.updateOne(
       query,
       update
     );
+
+    let uid = await answerTable.find({_id: id}, "author_id");
+    console.log(uid);
+    uid = uid[0].author_id;
+    console.log(uid);
+  
+    query = { _id: uid};
+    if(num == -1){
+      update = { $inc: { reputation: -10 } };
+    }
+    else{
+      update = { $inc: { reputation: 5 } };
+    }
+  
+    await userTable.updateOne(
+       query,
+       update
+    );
+
+  
     res.send(await answerTable.find({_id: id}, "votes"));
     
   }
@@ -288,6 +327,28 @@ app.post('/comment_update_qid', async(req,res)=>{
    );
 
    res.send(await questionTable.find({_id: data["qid"]}));
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+// add comment id to the answer and return updated answer
+app.post('/answer_update_aid', async(req,res)=>{
+  try{
+    let data=req.body;
+    //console.log(data);
+
+    const query = { _id: data["aid"]};
+    const update = { $push: { comments: data["comment_id"]} };
+
+    await answerTable.updateOne(
+      query,
+      update
+   );
+
+   res.send(await answerTable.find({_id: data["aid"]}));
 
   } catch (error) {
     console.log(error);
@@ -436,12 +497,30 @@ app.get('/checkLoggedIn', (req, res) => {
   console.log(session);
   if (session.username) {
     // If user is logged in, return the username or other user data as JSON
-    res.json(session.username);
+    res.json({
+      userId: session.userId,
+      username: session.username});
   } else {
     // If user is not logged in, return an error status code and message
     res.status(401).json({ error: 'User not logged in' });
   }
 });
+
+//return reputation of session user
+app.get('/getReputation', async (req, res) => {
+  // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
+  console.log(session);
+  if (session.username) {
+    // If user is logged in, return the username or other user data as JSON
+    let rep = await userTable.find({_id: session.userId}, "reputation");
+    console.log(rep);
+    res.json(rep);
+  } else {
+    // If user is not logged in, return an error status code and message
+    res.status(401).json({ error: 'User not logged in' });
+  }
+});
+
 
 app.get("/logout", async (req, res) => {
   session.userId = null

@@ -17,7 +17,7 @@ export default function App() {
   const [allQuestionsTitle, setAllQuestionsTitle] = useState(""); //use this to set the title
   const [clicked, setClicked] = useState("WelcomePage"); //state for changing Pages
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState();
 
 
   useEffect(() => {
@@ -30,7 +30,18 @@ export default function App() {
     console.log(error);
   });
   }, []);
-  
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/checkLoggedIn')
+    .then(function (response) {
+      console.log(response?.data);
+      setUser(response?.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    }, [isLoggedIn]);
+
   //dont need db
   return (
     <section className="fakeso">
@@ -66,11 +77,11 @@ export default function App() {
           />
         )}
       </div>}
-      {isLoggedIn && questionList && <div className="bodyContent"> 
-        <Banner isLoggedIn = {isLoggedIn} setIsLoggedIn = {setIsLoggedIn}questionList = {questionList} setQuestionList = {setQuestionList}
+      {isLoggedIn && questionList && user && <div className="bodyContent"> 
+        <Banner user={user} isLoggedIn = {isLoggedIn} setIsLoggedIn = {setIsLoggedIn}questionList = {questionList} setQuestionList = {setQuestionList}
         allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
         clicked={clicked} setClicked={setClicked}/>
-        <Body questionList = {questionList} setQuestionList = {setQuestionList}
+        <Body user={user} questionList = {questionList} setQuestionList = {setQuestionList}
         allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle}
         clicked={clicked} setClicked={setClicked}/>
       </div>}

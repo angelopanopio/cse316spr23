@@ -82,7 +82,12 @@
     padding: 2rem;
     background-color: white;
 }
-
+.UserProfileLink{
+    color: blue;
+    font-size: 2.5rem;
+    padding: 2rem;
+    background-color: white;
+}
 /*Body Content CSS */
 .bodyContent{
     display: flex;
@@ -372,6 +377,11 @@
     padding: 2rem 5rem 2rem 5rem;
     border-bottom: dotted;
     
+}
+
+.answersPage_AnswerAndComments{
+    display:flex;
+    flex-direction: column;
 }
 
 .answersPage_AnswerText{

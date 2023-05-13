@@ -7,12 +7,13 @@ import {getQuestionNewest, getQuestionActive} from './utils.js';
 //import Model from '../models/model.js';
 
 export default function HomePage(props) {
+    let user = props.user;
+    console.log(user);
     const current_questions = props.questionList;
+
 
     const [highlightPrev, setHighlightPrev] = useState(true); 
 
-
-    
 
     const [sortQuestions, modifyQuestion] = useState(current_questions); //not updating?
     const [allAnswers, setAllAnswers] = useState();
@@ -108,7 +109,7 @@ export default function HomePage(props) {
             </div>
         </div>
 
-        <ShowQuestions questions={question_page_arr?.length > 0 && question_page_arr[curr_question_page_index]} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
+        <ShowQuestions user={user} questions={question_page_arr?.length > 0 && question_page_arr[curr_question_page_index]} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
         <div className="questionsPrevAndNextButton">
           <button className="questionsPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
                                       if (curr_question_page_index == 0){

@@ -4,6 +4,8 @@ import SearchBar from './searchBar.js';
 
 export default function Banner(props) {
   const {
+    user, 
+    setUserId,
     isLoggedIn, 
     setIsLoggedIn,
     questionList,
@@ -14,20 +16,23 @@ export default function Banner(props) {
     setClicked
   } = props;
 
-  const [user, setUser] = useState('');
+  console.log(user.username);
+  //const [username, setUsername] = useState(user.username);
 
+  /** 
   useEffect(() => {
-    axios.get('http://localhost:8000/checkLoggedIn')
+    axios.get('http://localhost:8000/')
       .then(res => {
         setUser(res.data);
       })
       .catch(err => console.error(err));
   }, []);
+  */
 
   const handleLogout = () => {
     axios.get('http://localhost:8000/logout')
       .then(res => {
-        setUser('');
+        //setUsername('');
         setIsLoggedIn(false);
         setClicked("WelcomePage");
       })
@@ -40,8 +45,8 @@ export default function Banner(props) {
       <div className="headerDetails">
         <div className="pageTitle">Fake Stack OverFlow</div>
         <div className="user">
-          Welcome, {user}
-          {user &&
+          Welcome, {user.username}
+          {user.username &&
             <button onClick={handleLogout} style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold', padding: '10px' }}>Logout</button>
           }
         </div>
