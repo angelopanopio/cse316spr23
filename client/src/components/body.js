@@ -44,7 +44,7 @@ export default function Body(props) {
         </div>
 
       {questionList &&  <div className="bodyContent">
-          {clicked === "HomePage" && <HomePage  questions={question} setQuestion={setQuestion} allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
+          {clicked === "HomePage" && <HomePage questions={question} setQuestion={setQuestion} allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
           setClicked={setClicked}  questionList={questionList} setQuestionList={setQuestionList}/>}
           {clicked === "AnswerPage" && <AnswersPage question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
           {clicked === "AddAnswerPage" && <AddAnswerPage  question={question} setClicked={setClicked} setQuestion={setQuestion}/>}

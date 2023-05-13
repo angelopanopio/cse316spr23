@@ -5,19 +5,32 @@
 let userArgs = process.argv.slice(2)
 
 const express = require("express")
+const session = require("express-session")
+
 const app = express()
 const port = 8000
 const cors = require("cors")
 
+const bcrypt = require("bcrypt")
 // Use the cors middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+  })
+);
+
 
 var answerTable = require('./models/answers.js');
 var questionTable = require('./models/questions.js');
 var tagTable = require('./models/tags.js');
+var userTable = require('./models/user.js');
 var commentTable = require('./models/comments.js');
 var userTable = require('./models/user.js');
 
@@ -365,5 +378,75 @@ app.post('/update_questions',async (req,res)=>{
   }
 });
 
+//register new user
+app.post('/registerUser', async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    const user = await userTable.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+    const newUser = new userTable({
+      username: req.body.username,
+      password: req.body.password,
+      email: req.body.email
+    });
+    await newUser.save();
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+// handle login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await userTable.findOne({ email });
+    if (!user) {
+      return res.status(401).send({ message: "Email not registered!" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({ message: "Invalid email or password" });
+    }
+
+    session.userId = user.id;
+    session.username = user.username;
+    res.send({ message: "Successfully logged in!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "An error occurred while logging in" });
+  }
+});
+
+// guest log in
+app.post("/loginGuest", async (req, res) => {
+  session.userId = 0;
+  session.username = "Guest";
+  res.send({ message: "Successfully logged in!" });
+});
+
+// check log in
+app.get('/checkLoggedIn', (req, res) => {
+  // Check if user is logged in, e.g. by verifying a session or token
+  console.log(session);
+  if (session.username) {
+    // If user is logged in, return the username or other user data as JSON
+    res.json(session.username);
+  } else {
+    // If user is not logged in, return an error status code and message
+    res.status(401).json({ error: 'User not logged in' });
+  }
+});
+
+app.get("/logout", async (req, res) => {
+  session.userId = null
+  session.username = null
+  res.send("logged out")
+})
 
 
