@@ -76,11 +76,14 @@ export function AskQuestionPage(props) {
     async function handleNewQuestion() {
         let reputation = 0;
         try {
+            console.log("ds");
             const response = await axios.get('http://localhost:8000/checkLoggedIn', { withCredentials: true });
-            const username = response.data.username;
-            const reputationResponse = await axios.get('http://localhost:8000/getReputation', { params: { username }, withCredentials: true });
+            const userId = response.data.userId;
+
+            console.log(user);
+            const reputationResponse = await axios.get('http://localhost:8000/getReputation/' + user.userId);
             reputation = reputationResponse.data[0].reputation;
-            console.log(`User ${username} has reputation ${reputation}`);
+            console.log(`User ${userId} has reputation ${reputation}`);
         } catch (error) {
             console.error(error);
         }

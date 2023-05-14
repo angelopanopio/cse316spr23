@@ -8,7 +8,6 @@ const TagSchema = new Schema({
         type : String ,
         required: true
     },
-    users_using_tag: [{type: Schema.Types.ObjectId, ref: "User" }],
     url: String
     });
 

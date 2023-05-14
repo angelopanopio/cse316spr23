@@ -19,7 +19,7 @@ export default function UserProfile(props){
 
     // on page load
     useEffect(() => {
-        axios.get('http://localhost:8000/getReputation')
+        axios.get('http://localhost:8000/getReputation/' + user.userId)
         .then(function (response) {
           console.log(response?.data[0].reputation);
           setUserRep(response?.data[0].reputation);
@@ -27,7 +27,7 @@ export default function UserProfile(props){
         .catch(function (error) {
           console.log(error);
         });
-        axios.get('http://localhost:8000/getRegisterDate')
+        axios.get('http://localhost:8000/getRegisterDate/' + user.userId)
         .then(function (response) {
           console.log(response?.data[0].register_date);
           setRegDate(response?.data[0].register_date);
@@ -35,7 +35,7 @@ export default function UserProfile(props){
         .catch(function (error) {
           console.log(error);
         });
-        axios.get('http://localhost:8000/getQuestions')
+        axios.get('http://localhost:8000/getQuestions/' + user.userId)
         .then(function (response) {
           console.log(response?.data);
           setQuestionsAsked(response?.data);
@@ -49,7 +49,7 @@ export default function UserProfile(props){
     return(
         <div>    
             <div> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
-
+            <div> User Repuation: {userRep} </div>
             <div> Questions Asked: </div>
             {questionsAsked && <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/>}
 
@@ -89,7 +89,7 @@ function UserAnswers(props){
 
 function UserTags(props){
 
-    
+
 }
 
 /*

@@ -40,9 +40,8 @@ function userCreate(username, password, email){
     return user.save();
 }
 
-function tagCreate(name, users_using_tag) {
-  let tag = new Tag({ name: name,
-    users_using_tag : users_using_tag});
+function tagCreate(name) {
+  let tag = new Tag({ name: name});
   return tag.save();
 }
 
@@ -96,10 +95,10 @@ const populate = async () => {
   let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com');
   let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com');
 
-  let t1 = await tagCreate('react', [u2, ]);
-  let t2 = await tagCreate('javascript', [u2, u3 ]);
-  let t3 = await tagCreate('android-studio', [u3, u4]);
-  let t4 = await tagCreate('shared-preferences', [u3]);
+  let t1 = await tagCreate('react');
+  let t2 = await tagCreate('javascript');
+  let t3 = await tagCreate('android-studio');
+  let t4 = await tagCreate('shared-preferences');
 
   let c1 = await commentCreate(u2.username, 'testing', 5, false);
   let c2 = await commentCreate(u3.username, 'noice', 1, false);

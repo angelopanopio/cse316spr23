@@ -237,7 +237,7 @@ function QuestionCommentsContainer(props){
 
     async function handleNewComment(){
 
-        let reputation = await axios.get("http://localhost:8000/getReputation");
+        let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId );
         reputation = reputation.data[0].reputation;
         console.log(reputation);
         if(reputation < 50)
@@ -525,7 +525,7 @@ function AnswerCommentsContainer(props){
 
     async function handleNewComment(){
 
-        let reputation = await axios.get("http://localhost:8000/getReputation");
+        let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId);
         reputation = reputation.data[0].reputation;
         console.log(reputation);
         if(reputation < 50)

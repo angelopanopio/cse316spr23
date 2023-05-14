@@ -97,7 +97,7 @@ export default function EditQuestionPage(props){
         }
     }
     async function handleNewQuestion() {
-        let reputation = await axios.get("http://localhost:8000/getReputation");
+        let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId);
         reputation = reputation.data[0].reputation;
 
 
