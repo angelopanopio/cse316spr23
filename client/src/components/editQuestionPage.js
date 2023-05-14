@@ -12,7 +12,7 @@ export default function EditQuestionPage(props){
     let [questionTextData, setQuestionTextData] = useState(questionToEdit.text);
     let [questionSummaryData, setQuestionSummaryData] = useState(questionToEdit.summary);
     let [questionTagsData, setQuestionTagsData] = useState('');
-    let [questionAllTags, setQuestionAllTags] = useState([]);
+    let [questionOriginalTags, setQuestionOriginalTags] = useState([]);
     
     //let [userNameData, setUserNameData] = useState("");
     let [error, setError] = useState("* indicated mandatory fields");
@@ -25,8 +25,8 @@ export default function EditQuestionPage(props){
             axios.get('http://localhost:8000/getTagBytid/' + tags[i])
             .then(function (response) {
             console.log(response?.data[0]);
-            setQuestionAllTags(tagName => [...tagName, response?.data[0]]);
-            setQuestionTagsData(tagName => tagName + " " + response?.data[0].name);
+            setQuestionOriginalTags(tagName => [...tagName, response?.data[0]]);
+            setQuestionTagsData(tagName => tagName + (i != 0? ' ': '') + response?.data[0].name );
             })
             .catch(function (error) {
             console.log(error);
@@ -40,9 +40,9 @@ export default function EditQuestionPage(props){
 
         // Validate input
         let errorMessage = "";
-        if (questionTitleData.length === 0 || questionTitleData.length > 100) {
+        if (questionTitleData.length === 0 || questionTitleData.length > 50) {
             errorMessage =
-                "Title should not be empty and should be limited to 100 characters or less.";
+                "Title should not be empty and should be limited to 50 characters or less.";
         } else if (questionTextData.length === 0) {
             errorMessage = "Text should not be empty.";
         }
@@ -57,7 +57,8 @@ export default function EditQuestionPage(props){
          else if (questionTagsData.length === 0) {
             errorMessage = "Tags should not be empty.";
         } else {
-            const tagList = questionTagsData.split(/\s+/);
+            let tagList = questionTagsData.trimEnd().trimStart();
+            tagList = questionTagsData.split(/\s+/);
             if (tagList.length > 5) {
                 errorMessage = "You can only use up to 5 tags.";
             } else {
@@ -100,12 +101,15 @@ export default function EditQuestionPage(props){
         let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId);
         reputation = reputation.data[0].reputation;
 
-
+        console.log(questionTagsData);
         
         const tagsTable = await axios.get("http://localhost:8000/getAllTags");
         const tagsTableData = await tagsTable.data
         const tagNames = questionTagsData.split(" ");
         const tags = [];
+
+        console.log(tagsTableData);
+        console.log(tagNames);
 
         if(reputation < 50) // if there are tags that r new, return error
         {
@@ -121,13 +125,13 @@ export default function EditQuestionPage(props){
                 }
             }
         }
-        
-        
+
         
         // loop through each tag name in the tagNames array
         for (let i = 0; i < tagNames.length; i++) {
             // find the tag in the tags array with a matching name
             const tag = tagsTableData.find((t) => t.name === tagNames[i]);
+            
 
             // if the tag exists, add its id to the tags array
             if (tag) {
@@ -143,20 +147,28 @@ export default function EditQuestionPage(props){
                 tags.push(newTag);
             }
         }
-        const newQuestion = {
-            answers: [],
-            ask_date_time: new Date(),
+        const editQuestion = {
+            qid: questionToEdit._id,
+            answers: questionToEdit.answers,
+            comments: questionToEdit.comments,
+            ask_date_time: questionToEdit.ask_date_time,
             asked_by: user.username, 
             author_id: user.userId,
             tags: tags,
             text: questionTextData.trim(),
             summary: questionSummaryData.trim(),
             title: questionTitleData.trim(),
-            views: 0,
+            views: questionToEdit.views,
+            votes: questionToEdit.votes
 
         };
 
-        await axios.post("http://localhost:8000/update_questions", newQuestion);
+        console.log(editQuestion);
+
+        await axios.post("http://localhost:8000/edit_questions", editQuestion);
+
+        await axios.post("http://localhost:8000/refresh_tagTable");//delete tags that are not used by any questions 
+
         const updatedQuestionList = await axios.get("http://localhost:8000/getAllQuestions");
         // clear the form inputs
         setQuestionTitleData("");
@@ -173,11 +185,43 @@ export default function EditQuestionPage(props){
 
 
     //delets question and its associated answers
-    function deleteQuestion(){
+    async function deleteQuestion(){
         console.log(deleteQuestion);
-        console.log(questionTagsData);
-        console.log(questionAllTags);
 
+        const delQuestion = {
+            qid: questionToEdit._id,
+            answers: questionToEdit.answers,
+            comments: questionToEdit.comments,
+            ask_date_time: questionToEdit.ask_date_time,
+            asked_by: user.username, 
+            author_id: user.userId,
+            //tags: tags,
+            text: questionTextData.trim(),
+            summary: questionSummaryData.trim(),
+            title: questionTitleData.trim(),
+            views: questionToEdit.views,
+            votes: questionToEdit.votes
+
+        };
+
+        console.log(delQuestion);
+
+        await axios.post("http://localhost:8000/delete_question", delQuestion);
+
+        await axios.post("http://localhost:8000/refresh_tagTable");//delete tags that are not used by any questions 
+        
+        const updatedQuestionList = await axios.get("http://localhost:8000/getAllQuestions");
+        
+        setQuestionTitleData("");
+        setQuestionTextData("");
+        setQuestionTagsData("");
+        setQuestionSummaryData("");
+        //setUserNameData("");
+        setError("* indicated mandatory fields");
+
+        props.setAllQuestionsTitle("");
+        props.setQuestionList(updatedQuestionList.data);
+        props.setClicked("HomePage");
     }
 
     return (
@@ -210,7 +254,7 @@ export default function EditQuestionPage(props){
 
                 <div className = "askQuestion-Bottom">
                     <button type="submit" className = "askQuestion-Bottom__button"> Edit Question</button>
-                    <button type="button" className= "editQuestion-Bottom__button" onClick={deleteQuestion}>Delete</button>
+                    <button type="button" className= "deleteQuestion-Bottom__button" onClick={deleteQuestion}>Delete</button>
                     <div className = "askQuestion-Bottom__text">{error}</div>
                 </div>
             </form>

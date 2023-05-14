@@ -17,9 +17,9 @@ export function AskQuestionPage(props) {
 
         // Validate input
         let errorMessage = "";
-        if (questionTitleData.length === 0 || questionTitleData.length > 100) {
+        if (questionTitleData.length === 0 || questionTitleData.length > 50) {
             errorMessage =
-                "Title should not be empty and should be limited to 100 characters or less.";
+                "Title should not be empty and should be limited to 50 characters or less.";
         } else if (questionTextData.length === 0) {
             errorMessage = "Text should not be empty.";
         }

@@ -450,6 +450,109 @@ app.post('/update_questions',async (req,res)=>{
   }
 });
 
+
+//edit quesiton given qid and edited question info
+app.post('/edit_questions',async (req,res)=>{
+  try{
+    let data=req.body;
+    let qid = data['qid'];
+    console.log(data["tags"]);
+    let questions={
+      answers:data["answers"],
+      comments: data["comments"],
+      ask_date_time:data["ask_date_time"],
+      asked_by:data["asked_by"],
+      author_id: data["author_id"],
+      tags:data["tags"],
+      text:data["text"],
+      summary: data["summary"],
+      title:data["title"],
+      views:data["views"],
+      votes:data["votes"]
+    };
+
+    const update = { $set: questions };
+    await questionTable.findOneAndUpdate({_id: qid}, update)
+    res.json(questions);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+//given qid, delete questions, answers, comments associated with it
+app.post('/delete_question',async (req,res)=>{
+  try{
+    let data=req.body;
+    let qid = data['qid'];
+    console.log(data["tags"]);
+    let questions={
+      answers:data["answers"],
+      comments: data["comments"],
+      ask_date_time:data["ask_date_time"],
+      asked_by:data["asked_by"],
+      author_id: data["author_id"],
+      tags:data["tags"],
+      text:data["text"],
+      summary: data["summary"],
+      title:data["title"],
+      views:data["views"],
+      votes:data["votes"]
+    };
+
+    for(let i = 0; i < questions.answers.length; i++){
+      let aid = questions.answers[i];
+      await answerTable.deleteOne({"_id" : aid});
+    }
+
+    for(let i = 0; i < questions.comments.length; i++){
+      let cid = questions.comments[i];
+      await commentTable.deleteOne({"_id" : cid});
+    }
+
+    console.log(await questionTable.deleteOne({"_id" : qid}));
+
+    let allQuestions = await questionTable.find({});
+    res.json(allQuestions);
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+//delete tags in tagsTable that r not used at all in answersTable
+app.post('/refresh_tagTable', async(req,res)=>{
+  try{
+    let allTags = await tagTable.find({});
+    //console.log(allTags);
+    for(let i = 0; i < allTags.length; i++){
+      let tid = allTags[i]._id;
+      console.log(tid);
+      questionsWithTag = await questionTable.find({tags: tid})
+      console.log(questionsWithTag.length);
+
+      if(questionsWithTag.length == 0){
+        console.log("del")
+        await tagTable.deleteOne({"_id" : tid});
+        console.log(tid);
+      }
+    }
+
+    
+    allTags = await tagTable.find({});
+    res.json(allTags);
+    
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+
+
 //register new user
 app.post('/registerUser', async (req, res) => {
   try {
