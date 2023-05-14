@@ -499,6 +499,7 @@ app.post("/login", async (req, res) => {
 
 // guest log in
 app.post("/loginGuest", async (req, res) => {
+  console.log(req.session);
   req.session.userId = 0;
   req.session.username = "Guest";
   res.send({ message: "Successfully logged in!" });
@@ -507,7 +508,7 @@ app.post("/loginGuest", async (req, res) => {
 // check log in
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
-  console.log(session);
+  console.log(req.session);
   if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     res.json({
@@ -521,11 +522,11 @@ app.get('/checkLoggedIn', (req, res) => {
 
 //return reputation of session user
 app.get('/getReputation', async (req, res) => {
-  console.log(req.session);
+  const { username } = req.body;
   // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
-  if (req.session.username) {
+  if (username) {
     // If user is logged in, return the username or other user data as JSON
-    let rep = await userTable.find({_id: session.userId}, "reputation");
+    let rep = await userTable.find({ username }, "reputation");
     console.log(rep);
     res.json(rep);
   } else {
@@ -535,10 +536,11 @@ app.get('/getReputation', async (req, res) => {
 });
 
 
+
 //return arr of questions of session user
 app.get('/getQuestions', async (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
-  console.log(session);
+  console.log(req.session);
   if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     let q = await questionTable.find({author_id: session.userId});

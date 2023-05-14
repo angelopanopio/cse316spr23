@@ -74,11 +74,17 @@ export function AskQuestionPage(props) {
         }
     }
     async function handleNewQuestion() {
-        let reputation = await axios.get("http://localhost:8000/getReputation");
-        reputation = reputation.data[0].reputation;
+        let reputation = 0;
+        try {
+            const response = await axios.get('http://localhost:8000/checkLoggedIn', { withCredentials: true });
+            const username = response.data.username;
+            const reputationResponse = await axios.get('http://localhost:8000/getReputation', { params: { username }, withCredentials: true });
+            reputation = reputationResponse.data[0].reputation;
+            console.log(`User ${username} has reputation ${reputation}`);
+        } catch (error) {
+            console.error(error);
+        }
 
-
-        
         const tagsTable = await axios.get("http://localhost:8000/getAllTags");
         const tagsTableData = await tagsTable.data
         const tagNames = questionTagsData.split(" ");
