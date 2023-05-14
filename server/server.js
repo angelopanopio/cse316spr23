@@ -112,7 +112,7 @@ app.get('/getTagBytid/:tid', async (req, res) => {
   try{
     let tid = req.params.tid;
     //console.log(tid);
-    res.send(await tagTable.find({_id: tid}, "_id name"));
+    res.send(await tagTable.find({_id: tid}));
   }
   catch(error){
     console.log(error);
@@ -520,8 +520,39 @@ app.get('/getReputation', async (req, res) => {
   if (session.username) {
     // If user is logged in, return the username or other user data as JSON
     let rep = await userTable.find({_id: session.userId}, "reputation");
-    console.log(rep);
+    //console.log(rep);
     res.json(rep);
+  } else {
+    // If user is not logged in, return an error status code and message
+    res.status(401).json({ error: 'User not logged in' });
+  }
+});
+
+//return register Date of session user
+app.get('/getRegisterDate', async (req, res) => {
+  // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
+  console.log(session);
+  if (session.username) {
+    // If user is logged in, return the username or other user data as JSON
+    let rep = await userTable.find({_id: session.userId}, "register_date");
+    //console.log(rep);
+    res.json(rep);
+  } else {
+    // If user is not logged in, return an error status code and message
+    res.status(401).json({ error: 'User not logged in' });
+  }
+});
+
+
+//return arr of questions of session user
+app.get('/getQuestions', async (req, res) => {
+  // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
+  console.log(session);
+  if (session.username) {
+    // If user is logged in, return the username or other user data as JSON
+    let q = await questionTable.find({author_id: session.userId});
+    //console.log(q);
+    res.json(q);
   } else {
     // If user is not logged in, return an error status code and message
     res.status(401).json({ error: 'User not logged in' });

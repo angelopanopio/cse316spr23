@@ -4,6 +4,7 @@ import AnswersPage from './showAnswersPage.js';
 import TagsPage from './tagsPage.js';
 import AddAnswerPage from './addAnswerPage';
 import UserProfile from './userProfile.js';
+import EditQuestionPage from './editQuestionPage.js';
 import { AskQuestionPage } from './askQuestion.js';
 import { useState, useEffect } from "react";
 import axios from 'axios';
@@ -63,7 +64,13 @@ export default function Body(props) {
           setQuestion={setQuestion} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList} />}
           {clicked === "TagsPage" && <TagsPage  setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags}/>}
-          {clicked === "UserProfile" && <UserProfile  setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
+
+          {clicked === "UserProfile" && <UserProfile  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion}
+          setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
+          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}/>}
+
+          {clicked === "EditQuestionPage" && <EditQuestionPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
+          setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}/>}
         </div>}
     </div>
