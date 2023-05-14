@@ -52,6 +52,11 @@ export default function UserProfile(props){
 
             <div> Questions Asked: </div>
             {questionsAsked && <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/>}
+
+            <div>Questions that you Answered: </div>
+
+
+            <div>Your Tags: </div>
         </div>
     )
 }
@@ -75,6 +80,11 @@ function UserQuestions(props){
     
     let out = React.createElement("div", {}, elements);
     return out
+}
+
+function UserAnswers(props){
+
+
 }
 
 /*

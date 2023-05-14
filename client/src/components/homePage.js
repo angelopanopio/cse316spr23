@@ -24,7 +24,7 @@ export default function HomePage(props) {
     //console.log(question_page_arr);
     //console.log(curr_question_page_index);
 
-      // useEffect hook to update the sortQuestions state whenever the questionList prop is changed.
+    // useEffect hook to update the sortQuestions state whenever the questionList prop is changed.
 
     useEffect(() => {
         if (current_questions) {

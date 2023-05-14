@@ -36,7 +36,8 @@ export default function App() {
     .then(function (response) {
       console.log(response?.data);
       setIsLoggedIn(true);
-      setUser(response?.data.username);
+      setUser(response?.data);
+      setClicked("HomePage");
     })
     .catch(function (error) {
       console.log(error);

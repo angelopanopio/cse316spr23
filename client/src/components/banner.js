@@ -44,8 +44,8 @@ export default function Banner(props) {
       <div className="headerDetails">
         <div className="pageTitle">Fake Stack OverFlow</div>
         <div className="user">
-          Welcome, {user}
-          {user &&
+          Welcome, {user.username}
+          {user.username &&
             <button onClick={handleLogout} style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold', padding: '10px' }}>Logout</button>
           }
         </div>

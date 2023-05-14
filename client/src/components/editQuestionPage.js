@@ -34,7 +34,7 @@ export default function EditQuestionPage(props){
         }
         }, []);
 
-        // delete tag if its the only one using it
+    // update question
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -171,6 +171,8 @@ export default function EditQuestionPage(props){
         props.setClicked("HomePage");
     };
 
+
+    //delets question and its associated answers
     function deleteQuestion(){
         console.log(deleteQuestion);
         console.log(questionTagsData);

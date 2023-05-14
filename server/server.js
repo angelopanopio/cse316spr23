@@ -507,7 +507,7 @@ app.post("/loginGuest", async (req, res) => {
 // check log in
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
-  console.log(req.session);
+  console.log(session);
   if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     res.json({
@@ -521,26 +521,12 @@ app.get('/checkLoggedIn', (req, res) => {
 
 //return reputation of session user
 app.get('/getReputation', async (req, res) => {
+  console.log(req.session);
   // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
   if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     let rep = await userTable.find({_id: session.userId}, "reputation");
-    //console.log(rep);
-    res.json(rep);
-  } else {
-    // If user is not logged in, return an error status code and message
-    res.status(401).json({ error: 'User not logged in' });
-  }
-});
-
-//return register Date of session user
-app.get('/getRegisterDate', async (req, res) => {
-  // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
-  console.log(session);
-  if (session.username) {
-    // If user is logged in, return the username or other user data as JSON
-    let rep = await userTable.find({_id: session.userId}, "register_date");
-    //console.log(rep);
+    console.log(rep);
     res.json(rep);
   } else {
     // If user is not logged in, return an error status code and message
@@ -553,7 +539,7 @@ app.get('/getRegisterDate', async (req, res) => {
 app.get('/getQuestions', async (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
   console.log(session);
-  if (session.username) {
+  if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     let q = await questionTable.find({author_id: session.userId});
     //console.log(q);
