@@ -36,7 +36,6 @@ app.use(
 var answerTable = require('./models/answers.js');
 var questionTable = require('./models/questions.js');
 var tagTable = require('./models/tags.js');
-var userTable = require('./models/user.js');
 var commentTable = require('./models/comments.js');
 var userTable = require('./models/user.js');
 
@@ -488,6 +487,7 @@ app.post("/login", async (req, res) => {
 
     req.session.userId = user.id;
     req.session.username = user.username;
+    req.session.admin = user.admin;
     res.send({ message: "Successfully logged in!" });
   } catch (error) {
     console.error(error);
