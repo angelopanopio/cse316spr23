@@ -366,7 +366,8 @@ app.post('/answers_add_aid', async(req,res)=>{
     let new_ans = new answerTable({
       text: ans["text"],
       ans_by: ans["ans_by"],
-      ans_date_time: date
+      ans_date_time: date,
+      author_id: ans["author_id"]
     });
     await new_ans.save();
     res.json(new_ans["_id"]);
@@ -404,9 +405,13 @@ app.post('/question_update_aid', async(req,res)=>{
 //update tags add new tag
 app.post('/update_tag', async(req,res)=>{
   try{
-    let tag=req.body.tag_name;
+    let tag= req.body.tag_name;
+    let users_using_tag = req.body.userId;
     console.log(tag);
-    let new_tag=new tagTable({name:tag});
+    let new_tag=new tagTable({
+      name:tag,
+      users_using_tag: users_using_tag
+    });
     await new_tag.save();
     res.json(new_tag["_id"]);
   } catch (error) {
@@ -425,8 +430,10 @@ app.post('/update_questions',async (req,res)=>{
       answers:data["answers"],
       ask_date_time:data["ask_date_time"],
       asked_by:data["asked_by"],
+      author_id: data["author_id"],
       tags:data["tags"],
       text:data["text"],
+      summary: data["summary"],
       title:data["title"],
       views:data["views"],
     });

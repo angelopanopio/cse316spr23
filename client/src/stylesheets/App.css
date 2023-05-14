@@ -340,8 +340,17 @@
 .questionPage_CommentContainer{
     display: flex;
     flex-direction: row;
-    justify-content:space-around; 
+    justify-content: flex-start; 
+    align-items: center;
     font-size: 1rem;
+}
+
+.questionPage_CommentText{
+    width: 80%;
+}
+
+.questionPage_questionCommentAuthor{
+    width: 10%
 }
 
 
@@ -382,6 +391,7 @@
 .answersPage_AnswerAndComments{
     display:flex;
     flex-direction: column;
+    width: 80%;
 }
 
 .answersPage_AnswerText{

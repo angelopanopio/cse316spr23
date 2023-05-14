@@ -78,9 +78,9 @@ export default function AnswersPage(props) {
             <div className="answersPage_Header">
                 <div className="answersPage_NumOfAnswers">{(question.answers.length) === 1? "1 Answer" : question.answers.length + " Answers"} </div>
                 <div className="answersPage_QuestionTitle">{question.title}</div>
-                <button className="askQuestionButton" onClick={() => {
+                {user.userId != 0 && <button className="askQuestionButton" onClick={() => {
                                     props.setClicked("AskQuestionPage");
-                                }}>Ask Question</button>
+                                }}>Ask Question</button>}
             </div>
             <div className="answerPage_QuestionHeader">
                 <div className="answersPage_Views">{(question.views) === 1? "1 View" : question.views + " Views"}</div>
@@ -110,10 +110,10 @@ export default function AnswersPage(props) {
             {answer_page_arr?.length > 0 && <ShowAnswers user={user} question={question} allAnswers={answer_page_arr[curr_answer_page_index]} 
             setAnswer_page_arr={setAnswer_page_arr} answer_page_arr={answer_page_arr} curr_answer_page_index={curr_answer_page_index} />}
             <div className = "answersPage_QuestionButtonAndPrevNextButton">
-                <button className="answersPage_AnswerQuestionButton"onClick={() => {
+                {user.userId != 0 && <button className="answersPage_AnswerQuestionButton"onClick={() => {
                                         props.setClicked("AddAnswerPage");
                                         props.setQuestion(question);
-                                    }}>Answer Question</button>
+                                    }}>Answer Question</button>}
 
                     <button className="answerPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
                                                 if (curr_answer_page_index == 0){

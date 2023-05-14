@@ -20,20 +20,6 @@ export default function HomePage(props) {
 
     const [question_page_arr, setQuestion_page_arr] = useState([]);
 
-    useEffect(() => {
-        if (sortQuestions) {
-          let tmp = [];
-          for (let i = 0; i < sortQuestions.length; i += 5) {
-            let chunk = sortQuestions.slice(i, i + 5);
-            //console.log(chunk);
-            tmp = [...tmp, chunk];
-          }
-          
-          //console.log(tmp);
-          setQuestion_page_arr(tmp);
-        }
-    }, [sortQuestions]);
-
     const [curr_question_page_index, setCurr_question_page_index] = useState(0);
 
     //console.log(question_page_arr);
@@ -44,8 +30,24 @@ export default function HomePage(props) {
     useEffect(() => {
         if (current_questions) {
             modifyQuestion(getQuestionNewest(current_questions));
+            console.log(sortQuestions);
         }
+
     }, [current_questions]);
+
+    useEffect(() => {
+      if (sortQuestions) {
+        let tmp = [];
+        for (let i = 0; i < sortQuestions.length; i += 5) {
+          let chunk = sortQuestions.slice(i, i + 5);
+          //console.log(chunk);
+          tmp = [...tmp, chunk];
+        }
+        
+        //console.log(tmp);
+        setQuestion_page_arr(tmp);
+      }
+  }, [sortQuestions]);
 
     
     useEffect(() => {
@@ -95,9 +97,9 @@ export default function HomePage(props) {
     <div>
         <div className="questionsTop">
             <div className="allQuestionsTitle"> {props.allQuestionsTitle === "" ? "All Questions" : "Questions with " + props.allQuestionsTitle} </div>
-            <button className="askQuestionButton" onClick={ () => {
+            {user.userId != 0 && <button className="askQuestionButton" onClick={ () => {
                                     props.setClicked("AskQuestionPage");
-                                }}> Ask Question</button>
+                                }}> Ask Question</button>}
         </div>
 
         <div className="questionsInfo">

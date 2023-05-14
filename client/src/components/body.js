@@ -58,8 +58,8 @@ export default function Body(props) {
           {clicked === "HomePage" && <HomePage user={user} questions={question} setQuestion={setQuestion} allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
           setClicked={setClicked}  questionList={questionList} setQuestionList={setQuestionList}/>}
           {clicked === "AnswerPage" && <AnswersPage user={user} question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
-          {clicked === "AddAnswerPage" && <AddAnswerPage  question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
-          {clicked === "AskQuestionPage" && <AskQuestionPage  setClicked={setClicked} 
+          {clicked === "AddAnswerPage" && <AddAnswerPage  user={user} question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
+          {clicked === "AskQuestionPage" && <AskQuestionPage  user={user} setClicked={setClicked} 
           setQuestion={setQuestion} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList} />}
           {clicked === "TagsPage" && <TagsPage  setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags}/>}

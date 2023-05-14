@@ -7,8 +7,9 @@ import React from 'react';
 import axios from "axios";
 
 export default function AddAnswerPage(props) {
+    let user = props.user;
     let [error, setError] = useState("* indicated mandatory fields");
-    let [userNameData, setUserNameData] = useState("");
+    //let [userNameData, setUserNameData] = useState("");
     let [answerText, setAnswerText] = useState("");
     let [question, setQuestion] = useState(props.question);
     console.log(setQuestion);
@@ -17,7 +18,7 @@ export default function AddAnswerPage(props) {
 
     function handleSubmit(e){
         e.preventDefault();
-        console.log(userNameData);
+        //console.log(userNameData);
         console.log(answerText);
         
         let errorMessage = "";
@@ -38,10 +39,13 @@ export default function AddAnswerPage(props) {
                 errorMessage = `The hyperlink "${linkText}" has an invalid target URL. It must begin with "https://" or "http://".`;
             }
         }
+
+        /*
         if(userNameData === "" ){
             errorMessage = "Username field should not be empty";
         }
-        else if(answerText === ""){
+        */
+        if(answerText === ""){
             errorMessage = "Answer field should not be empty";
         }
 
@@ -60,17 +64,18 @@ export default function AddAnswerPage(props) {
 
         const answerPost = {
             text: answerText,
-            ans_by: userNameData.trim(),
+            ans_by: user.username,
             ans_date: new Date(),
+            author_id: user.userId
         };
 
-        console.log(answerPost);
+        //console.log(answerPost);
 
         let ans_id = await axios.post("http://localhost:8000/answers_add_aid", answerPost);
         ans_id = ans_id.data;
 
-        console.log(ans_id);
-        console.log(question._id);
+        //console.log(ans_id);
+        //console.log(question._id);
 
         const updateQuestion = {
             qid: question._id,
@@ -89,8 +94,6 @@ export default function AddAnswerPage(props) {
 
     return(
     <form className="AddAnswerPage_UsernameForm" id="AddAnswerPage_UsernameFormID" onSubmit={(e) => handleSubmit(e)}> 
-        <label className="addAnswerPage_UsernameLabel">Username*</label>
-        <textarea className="addAnswerPage_UsernameInput" id="addAnswerPage_UsernameInputID" value={userNameData} onChange={(e) => setUserNameData(e.target.value)} cols="20" rows="1" placeholder="Enter a username"></textarea>
         <label className="addAnswerPage_AnswerText">AnswerText*</label> 
         <textarea className="addAnswerPage_AnswerTextInput" id="addAnswerPage_AnswerTextInputID"  value={answerText} onChange={(e) => setAnswerText(e.target.value)} cols="20" rows="20" placeholder="Enter an answer"></textarea>
         <div className="addAnswerPage_footer">
@@ -102,3 +105,9 @@ export default function AddAnswerPage(props) {
 
 
 }
+
+/*
+<label className="addAnswerPage_UsernameLabel">Username*</label>
+        <textarea className="addAnswerPage_UsernameInput" id="addAnswerPage_UsernameInputID" value={userNameData} onChange={(e) => setUserNameData(e.target.value)} cols="20" rows="1" placeholder="Enter a username"></textarea>
+        
+*/

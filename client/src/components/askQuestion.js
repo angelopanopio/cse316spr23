@@ -3,10 +3,13 @@ import { useState } from "react";
 import React from "react";
 import axios from "axios";
 export function AskQuestionPage(props) {
+    let user = props.user;
     let [questionTitleData, setQuestionTitleData] = useState("");
     let [questionTextData, setQuestionTextData] = useState("");
+    let [questionSummaryData, setQuestionSummaryData] = useState("");
     let [questionTagsData, setQuestionTagsData] = useState("");
-    let [userNameData, setUserNameData] = useState("");
+    
+    //let [userNameData, setUserNameData] = useState("");
     let [error, setError] = useState("* indicated mandatory fields");
 
     const handleSubmit = (event) => {
@@ -19,9 +22,16 @@ export function AskQuestionPage(props) {
                 "Title should not be empty and should be limited to 100 characters or less.";
         } else if (questionTextData.length === 0) {
             errorMessage = "Text should not be empty.";
-        } else if (userNameData.length === 0) {
-            errorMessage = "Username should not be empty.";
-        } else if (questionTagsData.length === 0) {
+        }
+        else if (questionSummaryData.length === 0) {
+            errorMessage = "Summary should not be empty.";
+        }
+        else if (questionSummaryData.length > 140) {
+            errorMessage = "Summary be limited to 140 characters or less.";
+        }
+        // else if (userNameData.length === 0) {
+         //   errorMessage = "Username should not be empty.";} 
+         else if (questionTagsData.length === 0) {
             errorMessage = "Tags should not be empty.";
         } else {
             const tagList = questionTagsData.split(/\s+/);
@@ -64,10 +74,33 @@ export function AskQuestionPage(props) {
         }
     }
     async function handleNewQuestion() {
+        let reputation = await axios.get("http://localhost:8000/getReputation");
+        reputation = reputation.data[0].reputation;
+
+
+        
         const tagsTable = await axios.get("http://localhost:8000/getAllTags");
         const tagsTableData = await tagsTable.data
         const tagNames = questionTagsData.split(" ");
         const tags = [];
+
+        if(reputation < 50) // if there are tags that r new, return error
+        {
+            for (let i = 0; i < tagNames.length; i++) {
+                // find the tag in the tags array with a matching name
+                const tag = tagsTableData.find((t) => t.name === tagNames[i]);
+
+                if (tag) {
+                    //tags.push(tag._id);
+                } else {
+                    setError("You do not have enough reputation to make a new tag: " + tagNames[i]);
+                    return;
+                }
+            }
+        }
+        
+        
+        
         // loop through each tag name in the tagNames array
         for (let i = 0; i < tagNames.length; i++) {
             // find the tag in the tags array with a matching name
@@ -81,6 +114,7 @@ export function AskQuestionPage(props) {
                 let newTag = await (
                     await axios.post("http://localhost:8000/update_tag", {
                         tag_name: tagNames[i].toLowerCase(),
+                        userId : user.userId
                     })
                 ).data;
                 tags.push(newTag);
@@ -89,11 +123,14 @@ export function AskQuestionPage(props) {
         const newQuestion = {
             answers: [],
             ask_date_time: new Date(),
-            asked_by: userNameData.trim(),
+            asked_by: user.username, 
+            author_id: user.userId,
             tags: tags,
             text: questionTextData.trim(),
+            summary: questionSummaryData.trim(),
             title: questionTitleData.trim(),
             views: 0,
+
         };
 
         await axios.post("http://localhost:8000/update_questions", newQuestion);
@@ -102,13 +139,15 @@ export function AskQuestionPage(props) {
         setQuestionTitleData("");
         setQuestionTextData("");
         setQuestionTagsData("");
-        setUserNameData("");
+        setQuestionSummaryData("");
+        //setUserNameData("");
         setError("* indicated mandatory fields");
 
         props.setAllQuestionsTitle("");
         props.setQuestionList(updatedQuestionList.data);
         props.setClicked("HomePage");
     };
+
     return (
         <div className = "bodyContent">
             <form className = "askQuestion-Form" onSubmit={(e) => handleSubmit(e)}> 
@@ -124,17 +163,19 @@ export function AskQuestionPage(props) {
                 <label className = "askQuestion-label-description" htmlFor="askQuestion-Text"> Add details </label>
                 <textarea className="askQuestion-textarea-text" name="askQuestion-Text" value={questionTextData} onChange={(e) => setQuestionTextData(e.target.value)} placeholder="Enter question text here"></textarea>
                 </div>
-                
+
+                <div className = "askQuestion-Form__Div">
+                <label className = "askQuestion-label" htmlFor="askQuestion-Text"> Question Summary* </label>
+                <label className = "askQuestion-label-description" htmlFor="askQuestion-Text"> Add details </label>
+                <textarea className="askQuestion-textarea-text" name="askQuestion-Text" value={questionSummaryData} onChange={(e) => setQuestionSummaryData(e.target.value)} placeholder="Enter summary text here"></textarea>
+                </div>
+
                 <div className = "askQuestion-Form__Div">
                 <label className = "askQuestion-label" htmlFor="askQuestion-Tags"> Tags* </label>
                 <label className = "askQuestion-label-description" htmlFor="askQuestion-Tags"> Add keywords separated by whitespace </label>
                 <textarea className="askQuestion-textarea" name="askQuestion-Tags" value={questionTagsData} onChange={(e) => setQuestionTagsData(e.target.value)}placeholder='Enter tags here (Ex: "html css react")'></textarea>
                 </div>
 
-                <div className = "askQuestion-Form__Div">
-                <label className = "askQuestion-label" htmlFor="askQuestion-Username"> Username* </label>
-                <textarea className="askQuestion-textarea" name="askQuestion-Username" value={userNameData} onChange={(e) => setUserNameData(e.target.value)} placeholder="Enter username here"></textarea>
-                </div>
                 <div className = "askQuestion-Bottom">
                     <button type="submit" className = "askQuestion-Bottom__button"> Post Question </button>
                     <div className = "askQuestion-Bottom__text">{error}</div>
@@ -143,3 +184,14 @@ export function AskQuestionPage(props) {
         </div>
     );
 }
+
+/**
+                <div className = "askQuestion-Form__Div">
+                <label className = "askQuestion-label" htmlFor="askQuestion-Username"> Username* </label>
+                <textarea className="askQuestion-textarea" name="askQuestion-Username" value={userNameData} onChange={(e) => setUserNameData(e.target.value)} placeholder="Enter username here"></textarea>
+                </div>
+                <div className = "askQuestion-Bottom">
+                    <button type="submit" className = "askQuestion-Bottom__button"> Post Question </button>
+                    <div className = "askQuestion-Bottom__text">{error}</div>
+                </div>
+ */
