@@ -87,6 +87,11 @@ function UserAnswers(props){
 
 }
 
+function UserTags(props){
+
+    
+}
+
 /*
 The page displays a menu as described in
 the home use case. In the main section of the
