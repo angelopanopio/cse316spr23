@@ -28,13 +28,14 @@ let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-function userCreate(username, password, email, admin = false){
+function userCreate(username, password, email, admin = false, reputation){
     let user = new User(
         {
             username: username,
             password: password,
             email: email,
-            admin: admin
+            admin: admin,
+            reputation : reputation
         }
     );
 
@@ -91,10 +92,10 @@ function questionCreate(title, text, summary, tags, answers, comments, asked_by,
 }
 
 const populate = async () => {
-  let u1 = await userCreate(adminUser, adminPass, 'admin@gmail.com', true);
-  let u2 = await userCreate('jaden', 'password123', 'jadenw2542@gmail.com');
-  let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com');
-  let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com');
+  let u1 = await userCreate(adminUser, adminPass, 'admin@gmail.com', true, 9999);
+  let u2 = await userCreate('jaden', 'password123', 'jadenw2542@gmail.com', 50);
+  let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com', 50);
+  let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com', 50);
 
   let t1 = await tagCreate('react');
   let t2 = await tagCreate('javascript');
