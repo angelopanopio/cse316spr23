@@ -13,14 +13,13 @@ export default function LoginPage(props) {
         let errorMessage = "";
         const emailRegex = /\w+@\w+.\w+/
         event.preventDefault();
-        console.log("test");
         if(emailRegex.exec(email) && pwd.length > 0) {
             let login = {
                 email: email,
                 password: pwd
             }
             try {
-                await axios.post("http://localhost:8000/login", login);
+                await axios.post("http://localhost:8000/login", login, { withCredentials: true });
                 setIsLoggedIn(true);
                 setClicked("HomePage");
             } catch (error) {

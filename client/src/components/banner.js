@@ -16,7 +16,6 @@ export default function Banner(props) {
     setClicked
   } = props;
 
-  console.log(user.username);
   //const [username, setUsername] = useState(user.username);
 
   /** 
@@ -30,7 +29,7 @@ export default function Banner(props) {
   */
 
   const handleLogout = () => {
-    axios.get('http://localhost:8000/logout')
+    axios.get('http://localhost:8000/logout', { withCredentials: true })
       .then(res => {
         //setUsername('');
         setIsLoggedIn(false);
@@ -45,8 +44,8 @@ export default function Banner(props) {
       <div className="headerDetails">
         <div className="pageTitle">Fake Stack OverFlow</div>
         <div className="user">
-          Welcome, {user.username}
-          {user.username &&
+          Welcome, {user}
+          {user &&
             <button onClick={handleLogout} style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold', padding: '10px' }}>Logout</button>
           }
         </div>

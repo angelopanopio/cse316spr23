@@ -74,7 +74,7 @@ export function AskQuestionPage(props) {
         }
     }
     async function handleNewQuestion() {
-        let reputation = await axios.get("http://localhost:8000/getReputation");
+        let reputation = await axios.get("http://localhost:8000/getReputation", { withCredentials: true });
         reputation = reputation.data[0].reputation;
 
 

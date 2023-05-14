@@ -32,16 +32,16 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/checkLoggedIn')
+    axios.get('http://localhost:8000/checkLoggedIn', { withCredentials: true })
     .then(function (response) {
       console.log(response?.data);
-      setUser(response?.data);
+      setIsLoggedIn(true);
+      setUser(response?.data.username);
     })
     .catch(function (error) {
       console.log(error);
     });
     }, [isLoggedIn]);
-
   //dont need db
   return (
     <section className="fakeso">
