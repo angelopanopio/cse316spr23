@@ -13,18 +13,24 @@ const cors = require("cors")
 
 const bcrypt = require("bcrypt")
 // Use the cors middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use(
   session({
+    name:'mySessionCookie',
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: {secure:false} 
   })
 );
+
 
 
 var answerTable = require('./models/answers.js');
@@ -482,8 +488,8 @@ app.post("/login", async (req, res) => {
       return res.status(401).send({ message: "Invalid email or password" });
     }
 
-    session.userId = user.id;
-    session.username = user.username;
+    req.session.userId = user.id;
+    req.session.username = user.username;
     res.send({ message: "Successfully logged in!" });
   } catch (error) {
     console.error(error);
@@ -493,20 +499,20 @@ app.post("/login", async (req, res) => {
 
 // guest log in
 app.post("/loginGuest", async (req, res) => {
-  session.userId = 0;
-  session.username = "Guest";
+  req.session.userId = 0;
+  req.session.username = "Guest";
   res.send({ message: "Successfully logged in!" });
 });
 
 // check log in
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
-  console.log(session);
-  if (session.username) {
+  console.log(req.session);
+  if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     res.json({
-      userId: session.userId,
-      username: session.username});
+      userId: req.session.userId,
+      username: req.session.username});
   } else {
     // If user is not logged in, return an error status code and message
     res.status(401).json({ error: 'User not logged in' });
@@ -516,8 +522,7 @@ app.get('/checkLoggedIn', (req, res) => {
 //return reputation of session user
 app.get('/getReputation', async (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token await answerTable.find({_id: id}, "votes")
-  console.log(session);
-  if (session.username) {
+  if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     let rep = await userTable.find({_id: session.userId}, "reputation");
     //console.log(rep);
@@ -561,8 +566,8 @@ app.get('/getQuestions', async (req, res) => {
 
 
 app.get("/logout", async (req, res) => {
-  session.userId = null
-  session.username = null
+  req.session.userId = null
+  req.session.username = null
   res.send("logged out")
 })
 

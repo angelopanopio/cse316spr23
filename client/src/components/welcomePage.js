@@ -6,12 +6,12 @@ export default function WelcomePage(props) {
     async function handleGuestLogin() {
 
         try {
-            await axios.post("http://localhost:8000/loginGuest");
+            await axios.post("http://localhost:8000/loginGuest", {}, { withCredentials: true });
         } catch (error) {
             console.log(error.response.data.message);
         }
         setIsLoggedIn(true);
-        setClicked("HomePage");
+        // setClicked("HomePage");
     }
     return (
         <div>
@@ -22,6 +22,5 @@ export default function WelcomePage(props) {
                 <button onClick={handleGuestLogin}>Continue as Guest</button>
             </div>
         </div>
-        
     );
 }

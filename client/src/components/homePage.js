@@ -8,7 +8,6 @@ import {getQuestionNewest, getQuestionActive} from './utils.js';
 
 export default function HomePage(props) {
     let user = props.user;
-    console.log(user);
     const current_questions = props.questionList;
 
 
