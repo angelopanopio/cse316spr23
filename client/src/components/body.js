@@ -74,8 +74,7 @@ export default function Body(props) {
 
           {clicked === "AskQuestionPage" && <AskQuestionPage  user={user} setClicked={setClicked} 
           setQuestion={setQuestion} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList} />}
-          
-          {clicked === "TagsPage" && <TagsPage  setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
+          {clicked === "TagsPage" && <TagsPage  user={user} setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags}/>}
 
           {clicked === "UserProfile" && <UserProfile  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion}

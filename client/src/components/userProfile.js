@@ -16,15 +16,20 @@ export default function UserProfile(props){
     const[questionsAsked, setQuestionsAsked] = useState();
     const[questionsAnswered, setQuestionsAnswered] = useState();
 
-    
+    const [userMap, setUserMap] = useState({});
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [clickedUser, setClickedUser] = useState(null);
+    const [clickedUserRep, setClickedUserRep] = useState();
+    const [clickedUserRegDate, setClickedUserRegDate] = useState();
+    const [clickedUserQuestions, setClickedUserQuestions] = useState([]);
+
     let startTime = Date.now();
     console.log(user);
-
     // on page load
     useEffect(() => {
         axios.get('http://localhost:8000/getReputation/' + user.userId)
         .then(function (response) {
-          console.log(response?.data[0].reputation);
+          // console.log(response?.data[0].reputation);
           setUserRep(response?.data[0].reputation);
         })
         .catch(function (error) {
@@ -32,7 +37,7 @@ export default function UserProfile(props){
         });
         axios.get('http://localhost:8000/getRegisterDate/' + user.userId)
         .then(function (response) {
-          console.log(response?.data[0].register_date);
+          // console.log(response?.data[0].register_date);
           setRegDate(response?.data[0].register_date);
         })
         .catch(function (error) {
@@ -40,7 +45,7 @@ export default function UserProfile(props){
         });
         axios.get('http://localhost:8000/getQuestions/' + user.userId)
         .then(function (response) {
-          console.log(response?.data);
+          // console.log(response?.data);
           setQuestionsAsked(response?.data);
         })
         .catch(function (error) {
@@ -65,10 +70,56 @@ export default function UserProfile(props){
           console.log(error);
         });
         
+        axios.get('http://localhost:8000/checkAdmin/' + user.userId)
+        .then(function (response) {
+          const admin = response?.data?.[0]?.admin;
+          setIsAdmin(Boolean(admin));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        axios.get('http://localhost:8000/getAllUsers')
+        .then(response => {
+          setUserMap(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });  
         }, []);
 
-    return(
-        <div>    
+    const handleUserClick = async (userId) => {
+        setClickedUser(userId);
+        axios.get('http://localhost:8000/getReputation/' + userId)
+        .then(function (response) {
+          // console.log(response?.data[0].reputation);
+          setClickedUserRep(response?.data[0].reputation);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        axios.get('http://localhost:8000/getRegisterDate/' + userId)
+        .then(function (response) {
+          // console.log(response?.data[0].register_date);
+          setClickedUserRegDate(response?.data[0].register_date);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        axios.get('http://localhost:8000/getQuestions/' + userId)
+        .then(function (response) {
+          console.log(response?.data);
+          setClickedUserQuestions(response?.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
+    return (
+      <div>    
+        {!isAdmin && (
+          <div>
             <div className="userProfile_text"> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
             <div className="userProfile_text"> User Repuation: {userRep} </div>
             <div className="userProfile_text"> Questions Asked: </div>
@@ -80,19 +131,39 @@ export default function UserProfile(props){
 
             {questionsAnsweredClicked == true && questionsAnswered && <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
             setIsEditingAnswer={props.setIsEditingAnswer}/> }
-
-
-
+            
             <div>Your Tags: </div>
+          </div>
+        )}
+        {isAdmin && clickedUser === null && (
+          <div>
+              <div>User Register Date: {getMetaData(startTime, regDate, false).replace('ago', '').replace('asked','')}</div>
+              <div>User Reputation: {userRep}</div>
+              <div>User Map:</div>
+              <ul>
+                {Object.keys(userMap).map(userId => (
+                  <li key={userId} onClick={() => handleUserClick(userId)}>{userId}: {userMap[userId]}</li>
+                ))}
+              </ul>
+          </div>
+        )}
+        {isAdmin && clickedUser !== null && clickedUser !== user._id && (
+            <div>
+                <div> Admin view on User</div>
+                <div>User Register Date: {getMetaData(startTime, clickedUserRegDate, false).replace('ago', '').replace('asked','')}</div>
+                <div>User Reputation: {clickedUserRep}</div>
+                <div>Questions Asked:</div>
+                <UserQuestions questionsAsked={clickedUserQuestions} setClicked={props.setClicked} setQuestion={props.setQuestion} userId={clickedUser} />
+            </div>
+        )}
         </div>
-    )
+    );    
 }
 
 function UserQuestions(props){
     
     let questionsAsked = props.questionsAsked
     console.log(questionsAsked);
-
     let elements = [];
     for(let i = 0; i < questionsAsked.length; i++){
     let e = <div className="questionTitle" key={questionsAsked[i]._id} onClick={ () => {
