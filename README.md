@@ -4,7 +4,14 @@ Read the Project Specfications [here](https://docs.google.com/document/d/1zZjNk9
 Add design docs in *images/*
 
 ## Instructions to setup and run project
+Initialize database with your admin username and password: "node server/init.js mongodb://127.0.0.1:27017/fake_so admin password"
+Start server: type "node server/server.js"
+Start client: go to client folder and type "npm start"
 
-## Team Member 1 Contribution
+## Team Member 1 Contribution (Jaden Wong)
+- Updated schema and init file
+- Added vote, comment feature on questions and answers
+- Added prev and next functionality
+- Added editing answers and questions on User Profile 
 
 ## Team Member 2 Contribution
