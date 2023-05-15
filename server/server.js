@@ -610,8 +610,9 @@ app.post("/loginGuest", async (req, res) => {
 // check log in
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
+  console.log("test");
   console.log(req.session);
-  if (req.session.userId) {
+  if (req.session.username) {
     // If user is logged in, return the username or other user data as JSON
     res.json({
       userId: req.session.userId,
@@ -669,6 +670,27 @@ app.get('/getQuestions/:userId', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+app.get('/getAnsweredQuestions/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  console.log(userId);
+  try {
+    // Find all answers by the given userId
+    const answers = await answerTable.find({ ans_by: userId }).exec();
+
+    // Collect all question ids from the answers
+    const questionIds = answers.map((answer) => answer._id);
+
+    // Find all questions that have at least one answer from the user
+    const questions = await questionTable.find({ answers: { $in: questionIds } }).exec();
+
+    res.json(questions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 app.get('/getAllUsers', async (req, res) => {
   try {
     const users = await userTable.find({}, {_id: 1, username: 1});
