@@ -591,6 +591,7 @@ app.post("/login", async (req, res) => {
     req.session.userId = user.id;
     req.session.username = user.username;
     req.session.admin = user.admin;
+    req.session.reputation = user.reputation;
     res.send({ message: "Successfully logged in!" });
   } catch (error) {
     console.error(error);
@@ -610,7 +611,7 @@ app.post("/loginGuest", async (req, res) => {
 app.get('/checkLoggedIn', (req, res) => {
   // Check if user is logged in, e.g. by verifying a session or token
   console.log(req.session);
-  if (req.session.username) {
+  if (req.session.userId) {
     // If user is logged in, return the username or other user data as JSON
     res.json({
       userId: req.session.userId,
@@ -618,6 +619,17 @@ app.get('/checkLoggedIn', (req, res) => {
   } else {
     // If user is not logged in, return an error status code and message
     res.status(401).json({ error: 'User not logged in' });
+  }
+});
+app.get('/checkAdmin/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try{
+    let isAdmin = await userTable.find({_id: userId}, "admin");
+    console.log(isAdmin);
+    res.json(isAdmin);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
   }
 });
 
@@ -655,6 +667,19 @@ app.get('/getQuestions/:userId', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
+  }
+});
+app.get('/getAllUsers', async (req, res) => {
+  try {
+    const users = await userTable.find({}, {_id: 1, username: 1});
+    const userMap = users.reduce((acc, user) => {
+      acc[user._id] = user.username;
+      return acc;
+    }, {});
+    res.send(userMap);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "An error occurred while retrieving users" });
   }
 });
 
