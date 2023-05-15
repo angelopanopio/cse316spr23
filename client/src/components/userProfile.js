@@ -4,27 +4,31 @@ import axios from 'axios';
 import React from 'react';
 import getMetaData from "./utils";
 import EditQuestionPage from "./editQuestionPage";
-
+import ShowTags from "./showTags";
 
 export default function UserProfile(props){
     let user = props.user;
-
+    let questionList = props.questionList;
 
     const[questionsAnsweredClicked, setquestionsAnsweredClicked] = useState(false);
+    const[userTagsClicked, setUserTagsClicked] = useState(false);
     const[userRep, setUserRep] = useState();
     const[regDate, setRegDate] = useState();
     const[questionsAsked, setQuestionsAsked] = useState();
     const[questionsAnswered, setQuestionsAnswered] = useState();
+    const[userTags,setUserTags] = useState([]);
 
     const [userMap, setUserMap] = useState({});
     const [isAdmin, setIsAdmin] = useState(false);
     const [clickedUser, setClickedUser] = useState(null);
+    const [clickedUsername, setClickedUsername] = useState(null);
     const [clickedUserRep, setClickedUserRep] = useState();
     const [clickedUserRegDate, setClickedUserRegDate] = useState();
-    const [clickedUserQuestions, setClickedUserQuestions] = useState([]);
+    const [clickedUserQuestionsAsked, setClickedUserQuestionsAsked] = useState([]);
+    const [clickedUserQuestionsAnswered, setClickedUserQuestionsAnswered] = useState([]);
 
     let startTime = Date.now();
-    console.log(user);
+    //console.log(user);
     // on page load
     useEffect(() => {
         axios.get('http://localhost:8000/getReputation/' + user.userId)
@@ -69,7 +73,14 @@ export default function UserProfile(props){
         .catch(function (error) {
           console.log(error);
         });
-        
+        axios.get('http://localhost:8000/getUserTags/' + user.userId)
+        .then(response => {
+          // console.log(response.data);
+          setUserTags(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });  
         axios.get('http://localhost:8000/checkAdmin/' + user.userId)
         .then(function (response) {
           const admin = response?.data?.[0]?.admin;
@@ -89,6 +100,7 @@ export default function UserProfile(props){
 
     const handleUserClick = async (userId) => {
         setClickedUser(userId);
+        setClickedUsername(userMap[userId]);
         axios.get('http://localhost:8000/getReputation/' + userId)
         .then(function (response) {
           // console.log(response?.data[0].reputation);
@@ -107,12 +119,32 @@ export default function UserProfile(props){
         });
         axios.get('http://localhost:8000/getQuestions/' + userId)
         .then(function (response) {
-          console.log(response?.data);
-          setClickedUserQuestions(response?.data);
+          // console.log(response?.data);
+          setClickedUserQuestionsAsked(response?.data);
         })
         .catch(function (error) {
           console.log(error);
         });
+        axios.get('http://localhost:8000/getQuestionsAnswered/' + userId)
+        .then(function (response) {
+          // console.log(response?.data);
+          let data = [];
+          for(let i = 0; i < response.data.length; i++){
+            data.push(response.data[i][0]);
+          }
+
+          console.log(data);
+          data = Array.from(
+            data.reduce((map, obj) => map.set(obj._id, obj), new Map()).values()
+          );
+          //console.log(data);
+          setClickedUserQuestionsAnswered(data);
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        
     }
 
 
@@ -129,10 +161,15 @@ export default function UserProfile(props){
               setquestionsAnsweredClicked(true);
             }}>{'Questions that you Answered(Click to view)'}</div>
 
-            {questionsAnsweredClicked == true && questionsAnswered && (questionsAnswered != 0 ? <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
+            {questionsAnsweredClicked === true && questionsAnswered && (questionsAnswered !== 0 ? <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
             setIsEditingAnswer={props.setIsEditingAnswer}/> : "You did not answer any questions.")}
             
-            <div>Your Tags: </div>
+            <div className="linkToQuestionsAnswered" onClick={() => {
+              setUserTagsClicked(true);
+            }}>{'User Question Tags(Click to view)'}</div>
+
+            {userTagsClicked === true && userTags && (userTags !== 0 ? <UserTags user={user} userTags={userTags} questionList={questionList}setClicked={props.setClicked} 
+            setQuestion={props.setQuestion} />: "You do not have any tags with your questions.")}
           </div>
         )}
         {isAdmin && clickedUser === null && (
@@ -149,11 +186,19 @@ export default function UserProfile(props){
         )}
         {isAdmin && clickedUser !== null && clickedUser !== user._id && (
             <div>
-                <div> Admin view on User</div>
-                <div>User Register Date: {getMetaData(startTime, clickedUserRegDate, false).replace('ago', '').replace('asked','')}</div>
-                <div>User Reputation: {clickedUserRep}</div>
-                <div>Questions Asked:</div>
-                <UserQuestions questionsAsked={clickedUserQuestions} setClicked={props.setClicked} setQuestion={props.setQuestion} userId={clickedUser} />
+                <div className="userProfile_text"> Admin view on User: {clickedUsername}</div>
+                <div className="userProfile_text"> User Register Date: {getMetaData(startTime, clickedUserRegDate, false).replace('ago', '').replace('asked','')}</div>
+                <div className="userProfile_text"> User Repuation: {clickedUserRep} </div>
+                <div className="userProfile_text"> Questions Asked: </div>
+                {clickedUserQuestionsAsked && (clickedUserQuestionsAsked.length != 0 ? <UserQuestions questionsAsked= {clickedUserQuestionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : "You did not ask any questions.")}
+
+                <div className="linkToQuestionsAnswered" onClick={() => {
+                  setquestionsAnsweredClicked(true);
+                }}>{'Questions that you Answered(Click to view)'}</div>
+
+                {questionsAnsweredClicked === true && clickedUserQuestionsAnswered && (clickedUserQuestionsAnswered !== 0 ? <UserAnswers questionsAnswered={clickedUserQuestionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
+                setIsEditingAnswer={props.setIsEditingAnswer}/> : "You did not answer any questions.")}
+                <div>Your Tags: </div>
             </div>
         )}
         </div>
@@ -163,7 +208,7 @@ export default function UserProfile(props){
 function UserQuestions(props){
     
     let questionsAsked = props.questionsAsked
-    console.log(questionsAsked);
+    // console.log(questionsAsked);
     let elements = [];
     for(let i = 0; i < questionsAsked.length; i++){
     let e = <div className="questionTitle" key={questionsAsked[i]._id} onClick={ () => {
@@ -174,7 +219,7 @@ function UserQuestions(props){
     elements.push(e);
     }
 
-    console.log(elements);
+    // console.log(elements);
     
     let out = React.createElement("div", {}, elements);
     return out
@@ -182,7 +227,7 @@ function UserQuestions(props){
 
 function UserAnswers(props){
   let questionsAnswered = props.questionsAnswered;
-
+  // console.log(questionsAnswered);
   let elements = [];
   for(let i = 0; i < questionsAnswered.length; i++){
   let e = <div className="questionTitle" key={questionsAnswered[i]._id} onClick={ () => {
@@ -203,8 +248,15 @@ function UserAnswers(props){
 }
 
 function UserTags(props){
-
-
+  let userTags = props.userTags;
+  let questionList = props.questionList;
+  console.log("BRUHUH");
+  console.log(userTags);
+  return (
+    <div>
+      <ShowTags user={props.user} tags={userTags} questions={questionList} showHeader={false}/>
+    </div>
+  )
 }
 
 /*

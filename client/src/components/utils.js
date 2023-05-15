@@ -187,10 +187,11 @@ export function sortAnsIds(ansIds, allAnswers){
 export function getNumQuestionsWithTag(questions, tid)
 {
   let count = 0;
-  
-  for (let i = 0; i < questions.length; i++){
-    if (questions[i].tags.find(function (element) { return element === tid}) !== undefined){
-      count +=1;
+  if(questions){
+    for (let i = 0; i < questions.length; i++){
+      if (questions[i].tags.find(function (element) { return element === tid}) !== undefined){
+        count +=1;
+      }
     }
   }
 

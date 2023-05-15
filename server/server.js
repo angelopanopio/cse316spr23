@@ -756,7 +756,7 @@ app.get('/getReputation/:userId', async (req, res) => {
   const userId = req.params.userId;
   try{
     let rep = await userTable.find({_id: userId}, "reputation");
-    console.log(rep);
+    // console.log(rep);
     res.json(rep);
   } catch (error) {
     console.log(error);
@@ -769,7 +769,7 @@ app.get('/getRegisterDate/:userId', async (req, res) => {
   const userId = req.params.userId;
   try{
     let date = await userTable.find({_id: userId}, "register_date");
-    console.log(date);
+    // console.log(date);
     res.json(date);
   } catch (error) {
     console.log(error);
@@ -848,6 +848,29 @@ app.get('/getQuestionsAnswered/:userId', async (req, res) => {
     res.sendStatus(500);
   }
 });
+//returns tags of questions user asked
+app.get('/getUserTags/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const questions = await questionTable.find({ author_id: userId }).populate({ path: 'tags', select: '_id name' });
+    const tagsMap = new Map();
+    questions.forEach(q => {
+      q.tags.forEach(t => {
+        if (!tagsMap.has(t.name)) {
+          tagsMap.set(t.name, { _id: t._id, name: t.name });
+        }
+      });
+    });
+    const tags = Array.from(tagsMap.values());
+    res.status(200).json(tags);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error retrieving tags');
+  }
+});
+
+
+
 
 app.get("/logout", async (req, res) => {
   req.session.userId = null
