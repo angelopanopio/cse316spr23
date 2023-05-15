@@ -93,43 +93,50 @@ function questionCreate(title, text, summary, tags, answers, comments, asked_by,
 
 const populate = async () => {
   let u1 = await userCreate(adminUser, adminPass, 'admin@gmail.com', true, 9999);
-  let u2 = await userCreate('jaden', 'password123', 'jadenw2542@gmail.com', 50);
-  let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com', 50);
-  let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com', 50);
+  let u2 = await userCreate('jaden', 'password123', 'jadenw2542@gmail.com', false, 50);
+  let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com', false, 50);
+  let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com', false, 50);
 
   let t1 = await tagCreate('react');
   let t2 = await tagCreate('javascript');
   let t3 = await tagCreate('android-studio');
   let t4 = await tagCreate('shared-preferences');
+  let t5 = await tagCreate('css');
 
   let c1 = await commentCreate(u2.username, 'testing', 5, false);
   let c2 = await commentCreate(u3.username, 'noice', 1, false);
   let c3 = await commentCreate(u4.username, 'pogchamp', false, false);
-  let c4 = await commentCreate(u4.username, 'poggers]', false, false);
+  let c4 = await commentCreate(u2.username, 'poggers', false, false);
+  let c5 = await commentCreate(u3.username, 'good answer', false, false);
+  let c6 = await commentCreate(u4.username, 'bad answer', false, false);
+  let c7 = await commentCreate(u2.username, 'i like your answer', false, false);
+  let c8 = await commentCreate(u3.username, 'wowzers', false, false);
 
   let a1 = await answerCreate('React Router is mostly a wrapper around the history library. history handles interaction with the browser\'s window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don\'t have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.',
-   u2.username, false, [c1, c2, c3, c4], false, u2);
+   u2.username, false, [c1, c2, c3, c4, c5], false, u2);
   let a2 = await answerCreate('On my end, I like to have a single history object that I can carry even outside components. I like to have a single history.js file that I import on demand, and just manipulate it. You just have to change BrowserRouter to Router, and specify the history prop. This doesn\'t change anything for you, except that you have your own history object that you can manipulate as you want. You need to install history, the library used by react-router.',
-   u3.username, false, [c1, c2, c3, c4], 1, u3);
+   u3.username, false, [c6, c7], 1, u3);
   let a3 = await answerCreate('Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background.',
    u4.username, false, false, 2, u4);
   let a4 = await answerCreate('YourPreference yourPrefrence = YourPreference.getInstance(context); yourPreference.saveData(YOUR_KEY,YOUR_VALUE);',
-  u2.username, false, false, 3,u2);
+  u2.username, false, false, 3, u2);
   let a5 = await answerCreate('I just found all the above examples just too confusing, so I wrote my own. ',
   u3.username, false, false, 4, u3);
-
-  let a6 = await answerCreate('test',
+  let a6 = await answerCreate('The text-align: center; only centers the elements inline contents, not the element itself.',
   u3.username, false, false, 5, u3);
+  let a7 = await answerCreate('What does useEffect do? By using this Hook, you tell React that your component needs to do something after render. ',
+  u2.username, false, false, 5, u2);
+
 
   await questionCreate('Programmatically navigate using React router', 'the alert shows the proper index for the li clicked, and when I alert the variable within the last function I\'m calling, moveToNextImage(stepClicked), the same value shows but the animation isn\'t happening. This works many other ways, but I\'m trying to pass the index value of the list item clicked to use for the math to calculate.', 
   'animation not working', [t1, t2], [a1, a2], false, u2.username , false, false, 5, u2);
   await questionCreate('android studio save string shared preference, start activity and load the saved string', 'I am using bottom navigation view but am using custom navigation, so my fragments are not recreated every time i switch to a different view. I just hide/show my fragments depending on the icon selected. The problem i am facing is that whenever a config change happens (dark/light theme), my app crashes. I have 2 fragments in this activity and the below code is what i am using to refrain them from being recreated.',
   'app crashing', [t3, t4, t2], [a3, a4, a5], false, u3.username, false, 121, 7, u3);
-  await questionCreate('testing1', 'testing1', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u4.username, false, 5, false, u4);
-  await questionCreate('testing2', 'testing2', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u3.username, false, 5, false, u3);
-  await questionCreate('testing3', 'testing3', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
-  await questionCreate('testing4', 'testing4', 'summary', [t3], [a1, a2, a3, a4, a5, a6], [c1, c2, c3, c4], u2.username, false, 5, false, u2);
-  await questionCreate('testing5', 'testing5', 'summary', [t3], false, false, u2.username, false, 5, false, u2);
+  await questionCreate('Center a div in CSS', 'I trying to center a <div> horizontally.I already have text-align: center; on the <div> itself, but it does not work.Any suggestions?', 
+  'center div', [t5], [a6], false, u2.username , false, false, 20, u2);
+  await questionCreate('UseEffect usage', 'Can someone explain what useEffect does', 
+  'help', [t1], [a7], [c8], u4.username , false, false, 20, u4);
+
   if(db) db.close();
   console.log('done');
 }

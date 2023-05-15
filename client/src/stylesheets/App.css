@@ -224,6 +224,20 @@
 
 }
 
+.linkToQuestionsAnswered{
+    color: red;
+    font-weight: bold;
+    font-size: 3rem;
+    padding-bottom: 1rem;
+}
+
+.userProfile_text{
+    color: red;
+    font-weight: bold;
+    font-size: 3rem;
+    padding-bottom: 1rem;
+}
+
 .questionTags{
     display: flex;
     flex-direction:row;
@@ -406,6 +420,11 @@
     font-size: 1.5rem;
     text-align: center;
     width: 22rem;
+}
+
+.editAnswerButton{
+    color: blue;
+    font-size: 1.5rem;
 }
 
 .answersPage_AnswerAuthor{

@@ -8,6 +8,8 @@ import EditQuestionPage from './editQuestionPage.js';
 import { AskQuestionPage } from './askQuestion.js';
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import EditAnswerPage from './editAnswerPage.js';
+
 //import { highlightQuestion, highlightTag } from './utils.js';
 
 
@@ -23,6 +25,9 @@ export default function Body(props) {
   const [highlightQuestion, setHighlightQuestion] = useState(true); //state for highlighting question
   const [highlightUserProfile, setHighlightUserProfile] = useState(false);
 
+
+  const[isEditingAnswer, setIsEditingAnswer] = useState(false); // used to edit answer from user profile
+  const[answerToBeEdited, setAnswerToBeEdited] = useState(false);//answer that is being edited
 
   async function displayAllQuestions(){
     setQuestionList(null);
@@ -60,21 +65,32 @@ export default function Body(props) {
 
       {user && questionList &&  <div className="bodyContent">
           {clicked === "HomePage" && <HomePage user={user} questions={question} setQuestion={setQuestion} allQuestionsTitle={allQuestionsTitle} setAllQuestionsTitle={setAllQuestionsTitle} 
-          setClicked={setClicked}  questionList={questionList} setQuestionList={setQuestionList}/>}
-          {clicked === "AnswerPage" && <AnswersPage user={user} question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
+          setClicked={setClicked}  questionList={questionList} setQuestionList={setQuestionList} isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer} />}
+
+          {clicked === "AnswerPage" && <AnswersPage user={user} question={question} setClicked={setClicked} setQuestion={setQuestion} 
+          answerToBeEdited={answerToBeEdited} setAnswerToBeEdited={setAnswerToBeEdited} isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer}/>}
+
           {clicked === "AddAnswerPage" && <AddAnswerPage  user={user} question={question} setClicked={setClicked} setQuestion={setQuestion}/>}
+
           {clicked === "AskQuestionPage" && <AskQuestionPage  user={user} setClicked={setClicked} 
           setQuestion={setQuestion} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList} />}
+          
           {clicked === "TagsPage" && <TagsPage  setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags}/>}
 
           {clicked === "UserProfile" && <UserProfile  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion}
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
-          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}/>}
+          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
+          isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer}/>}
 
           {clicked === "EditQuestionPage" && <EditQuestionPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}/>}
+
+          {clicked === "EditAnswerPage" && <EditAnswerPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
+          setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
+          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
+          answerToBeEdited={answerToBeEdited} setAnswerToBeEdited={setAnswerToBeEdited}/>}
         </div>}
     </div>
   );

@@ -110,7 +110,8 @@ export default function HomePage(props) {
             </div>
         </div>
 
-        <ShowQuestions user={user} questions={question_page_arr?.length > 0 && question_page_arr[curr_question_page_index]} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
+        <ShowQuestions user={user} questions={question_page_arr?.length > 0 && question_page_arr[curr_question_page_index]} 
+        setIsEditingAnswer={props.setIsEditingAnswer} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
         <div className="questionsPrevAndNextButton">
           <button className="questionsPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
                                       if (curr_question_page_index == 0){
@@ -226,6 +227,7 @@ export default function HomePage(props) {
                                 <div className="questionTitle" onClick={ () => {
                                     props.setClicked("AnswerPage");
                                     props.setQuestion(currentQuestion);
+                                    props.setIsEditingAnswer(false);
                                 }} > {currentQuestion.title} </div>
 
                                 <div className="questionSummary">

@@ -10,9 +10,12 @@ export default function UserProfile(props){
     let user = props.user;
 
 
+    const[questionsAnsweredClicked, setquestionsAnsweredClicked] = useState(false);
     const[userRep, setUserRep] = useState();
     const[regDate, setRegDate] = useState();
-    const [questionsAsked, setQuestionsAsked] = useState();
+    const[questionsAsked, setQuestionsAsked] = useState();
+    const[questionsAnswered, setQuestionsAnswered] = useState();
+
     
     let startTime = Date.now();
     console.log(user);
@@ -43,17 +46,41 @@ export default function UserProfile(props){
         .catch(function (error) {
           console.log(error);
         });
+        axios.get('http://localhost:8000/getQuestionsAnswered/' + user.userId)
+        .then(function (response) {
+          console.log(response?.data);
+          let data = [];
+          for(let i = 0; i < response.data.length; i++){
+            data.push(response.data[i][0]);
+          }
+
+          console.log(data);
+          data = Array.from(
+            data.reduce((map, obj) => map.set(obj._id, obj), new Map()).values()
+          );
+          console.log(data);
+          setQuestionsAnswered(data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
         
         }, []);
 
     return(
         <div>    
-            <div> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
-            <div> User Repuation: {userRep} </div>
-            <div> Questions Asked: </div>
-            {questionsAsked && <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/>}
+            <div className="userProfile_text"> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
+            <div className="userProfile_text"> User Repuation: {userRep} </div>
+            <div className="userProfile_text"> Questions Asked: </div>
+            {questionsAsked && (questionsAsked.length != 0 ? <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : "You did not ask any questions.")}
 
-            <div>Questions that you Answered: </div>
+            <div className="linkToQuestionsAnswered" onClick={() => {
+              setquestionsAnsweredClicked(true);
+            }}>Questions that you Answered</div>
+
+            {questionsAnsweredClicked == true && questionsAnswered && <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
+            setIsEditingAnswer={props.setIsEditingAnswer}/> }
+
 
 
             <div>Your Tags: </div>
@@ -83,8 +110,25 @@ function UserQuestions(props){
 }
 
 function UserAnswers(props){
+  let questionsAnswered = props.questionsAnswered;
 
+  let elements = [];
+  for(let i = 0; i < questionsAnswered.length; i++){
+  let e = <div className="questionTitle" key={questionsAnswered[i]._id} onClick={ () => {
+                props.setClicked("AnswerPage");
+                props.setQuestion(questionsAnswered[i]);
+                props.setIsEditingAnswer(true);
+          }} > {questionsAnswered[i].title} </div>;
 
+  console.log(e);
+
+  elements.push(e);
+  }
+
+  console.log(elements);
+  
+  let out = React.createElement("div", {}, elements);
+  return out
 }
 
 function UserTags(props){

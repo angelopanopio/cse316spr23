@@ -647,6 +647,7 @@ app.get('/getRegisterDate/:userId', async (req, res) => {
   }
 });
 
+//returns questions that user asked
 app.get('/getQuestions/:userId', async (req, res) => {
   const userId = req.params.userId;
   try{
@@ -663,5 +664,32 @@ app.get("/logout", async (req, res) => {
   req.session.username = null
   res.send("logged out")
 })
+
+//returns questions that user answered
+app.get('/getQuestionsAnswered/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  let questions = [];
+  try{
+    answersIds = await answerTable.find({author_id: userId}, "_id");
+    for(let i = 0; i < answersIds.length; i ++){
+      let q = await questionTable.find({answers: answersIds[i]._id});
+      questions.push(q);
+    }
+
+    console.log(questions);
+
+    res.json(questions);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get("/logout", async (req, res) => {
+  req.session.userId = null
+  req.session.username = null
+  res.send("logged out")
+})
+
 
 

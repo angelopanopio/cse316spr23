@@ -44,7 +44,28 @@ export default function AnswersPage(props) {
         .then(function (response) {
           //console.log(response?.data);
           console.log(getAnswersListNewest(question, response?.data));
-          setAllAnswers(getAnswersListNewest(question, response?.data));
+
+          if (props.isEditingAnswer == true){
+
+            let userAnsFirst = []
+            let ans = getAnswersListNewest(question, response?.data);
+            
+            for (let i = 0; i < ans.length; i++ )
+            {
+                if(ans[i].author_id == user.userId){
+                    userAnsFirst.unshift(ans[i]);
+                }
+                else{
+                    userAnsFirst.push(ans[i]);
+                }
+            }
+            setAllAnswers(userAnsFirst);
+          }
+
+        else 
+        {
+            setAllAnswers(getAnswersListNewest(question, response?.data));
+        }
         })
         .catch(function (error) {
           console.log(error);
@@ -108,7 +129,8 @@ export default function AnswersPage(props) {
 
 
             {answer_page_arr?.length > 0 && <ShowAnswers user={user} question={question} allAnswers={answer_page_arr[curr_answer_page_index]} 
-            setAnswer_page_arr={setAnswer_page_arr} answer_page_arr={answer_page_arr} curr_answer_page_index={curr_answer_page_index} />}
+            setAnswer_page_arr={setAnswer_page_arr} answer_page_arr={answer_page_arr} curr_answer_page_index={curr_answer_page_index} setClicked={props.setClicked}
+            answerToBeEdited={props.answerToBeEdited} setAnswerToBeEdited={props.setAnswerToBeEdited} isEditingAnswer={props.isEditingAnswer} setIsEditingAnswer={props.setIsEditingAnswer} />}
             <div className = "answersPage_QuestionButtonAndPrevNextButton">
                 {user.userId != 0 && <button className="answersPage_AnswerQuestionButton"onClick={() => {
                                         props.setClicked("AddAnswerPage");
@@ -401,21 +423,24 @@ function ShowAnswers(props) {
     let arr = [];
     for(let i = 0; i < answersArr.length; i ++)
         {
-            arr.push(<ShowSingleAnswer user={props.user} currentAns={answersArr[i]} i = {i} key={answersArr[i]._id} 
-            setAnswer_page_arr={props.setAnswer_page_arr} answer_page_arr={props.answer_page_arr} curr_answer_page_index={props.curr_answer_page_index}/>)
+            arr.push(<ShowSingleAnswer user={props.user} currentAns={answersArr[i]} i = {i} key={answersArr[i]._id}  setClicked={props.setClicked}
+            setAnswer_page_arr={props.setAnswer_page_arr} answer_page_arr={props.answer_page_arr} curr_answer_page_index={props.curr_answer_page_index}
+            answerToBeEdited={props.answerToBeEdited} setAnswerToBeEdited={props.setAnswerToBeEdited} isEditingAnswer={props.isEditingAnswer} setIsEditingAnswer={props.setIsEditingAnswer}/>)
         }
     return React.createElement("div", {}, arr);
 
 }
 
 function ShowSingleAnswer(props){   
-    console.log(props);
+    //console.log(props);
     let user = props.user;
     let currentAns = props.currentAns;
     let startTime = Date.now();
     let isAnswer = true;
     const [answerVotes, setAnswerVotes] = useState(currentAns.votes);
-
+    //console.log(currentAns.author_id);
+    //console.log(user.userId );
+    //console.log(props.isEditingAnswer);
 
     async function answerVote(num){
         if(user.userId == 0)
@@ -440,16 +465,24 @@ function ShowSingleAnswer(props){
             user={user} currentAns={currentAns} />}
             </div>
             <div className="answersPage_AnswerMetadata">
-                <div className="answersPage_AnswerAuthor">{currentAns.ans_by}</div>
-                <div className="answerPage_AnswerText">
-                    {getMetaData(startTime, currentAns.ans_date_time, isAnswer)}
-                </div>
+                <div className="answersPage_AnswerMetadata">
 
-                <div className = "answerPage_votes"> {answerVotes} </div>
+                {currentAns.author_id == user.userId && props.isEditingAnswer == true && <button className="editAnswerButton" onClick={() => {
+                    props.setClicked("EditAnswerPage");
+                    props.setAnswerToBeEdited(currentAns);
+                }}> Edit Answer</button>}
 
-                <div> 
-                    <button className="answerPage_upvote" onClick={() => answerVote(1)}> {"\u2191"}</button>
-                    <button className="answerPage_downvote" onClick={() => answerVote(-1)}> {"\u2193"}</button>
+                    <div className="answersPage_AnswerAuthor">{currentAns.ans_by}</div>
+                    <div className="answerPage_AnswerText">
+                        {getMetaData(startTime, currentAns.ans_date_time, isAnswer)}
+                    </div>
+
+                    <div className = "answerPage_votes"> {answerVotes} </div>
+
+                    <div> 
+                        <button className="answerPage_upvote" onClick={() => answerVote(1)}> {"\u2191"}</button>
+                        <button className="answerPage_downvote" onClick={() => answerVote(-1)}> {"\u2193"}</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -601,6 +634,7 @@ function AnswerCommentsContainer(props){
                                     setHighlightPrev(false);
                                 }
                             }}> Next</button>
+
             {comment_page_arr?.length > 0 && <AnswerCommentPage user={user} comments={comment_page_arr[curr_comment_page_index]}
             setComment_page_arr={setComment_page_arr} />}
 
