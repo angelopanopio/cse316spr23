@@ -127,10 +127,10 @@ export default function UserProfile(props){
 
             <div className="linkToQuestionsAnswered" onClick={() => {
               setquestionsAnsweredClicked(true);
-            }}>Questions that you Answered</div>
+            }}>{'Questions that you Answered(Click to view)'}</div>
 
-            {questionsAnsweredClicked == true && questionsAnswered && <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
-            setIsEditingAnswer={props.setIsEditingAnswer}/> }
+            {questionsAnsweredClicked == true && questionsAnswered && (questionsAnswered != 0 ? <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
+            setIsEditingAnswer={props.setIsEditingAnswer}/> : "You did not answer any questions.")}
             
             <div>Your Tags: </div>
           </div>

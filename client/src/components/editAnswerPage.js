@@ -5,14 +5,14 @@ import axios from "axios";
 
 export default function EditAnswerPage(props){
 
-    let currAns = props.currAns;
+    let currAns = props.answerToBeEdited;
     console.log(currAns);
     let user = props.user;
     let [error, setError] = useState("* indicated mandatory fields");
     //let [userNameData, setUserNameData] = useState("");
-    let [answerText, setAnswerText] = useState("");
+    let [answerText, setAnswerText] = useState(currAns.text);
     let [question, setQuestion] = useState(props.question);
-    console.log(setQuestion);
+    console.log(question);
     
     
 
@@ -62,34 +62,64 @@ export default function EditAnswerPage(props){
 
     async function handleNewAnswer(){
 
-        const answerPost = {
+
+
+        const editAnswer = {
+            aid: currAns._id, 
+            comments: currAns.comments,
             text: answerText,
-            ans_by: user.username,
-            ans_date: new Date(),
-            author_id: user.userId
+            votes: currAns.votes,
+            ans_by: currAns.ans_by,
+            ans_date_time: currAns.ans_date_time,
+            author_id: currAns.author_id
         };
+        console.log(editAnswer);
 
         //console.log(answerPost);
 
-        let ans_id = await axios.post("http://localhost:8000/answers_add_aid", answerPost);
+        let ans_id = await axios.post("http://localhost:8000/edit_answer", editAnswer);
         ans_id = ans_id.data;
 
-        //console.log(ans_id);
-        //console.log(question._id);
 
-        const updateQuestion = {
-            qid: question._id,
-            aid: ans_id
-        };
+        let updatedQuestion = await axios.get("http://localhost:8000/given_aid_get_qid/" + currAns._id);
 
-        let updatedQuestion = await axios.post("http://localhost:8000/question_update_aid", updateQuestion);
+        //console.log(updatedQuestion);
 
         console.log(updatedQuestion.data[0]);
-
-        console.log(ans_id);
+        //console.log(ans_id);
         props.setQuestion(updatedQuestion.data[0]);
         props.setClicked("AnswerPage");
     }
+
+    async function deleteAnswer(){
+        console.log("lol");
+        let aid = currAns._id
+
+        let updatedQuestion = await axios.get("http://localhost:8000/given_aid_get_qid/" + currAns._id);
+        updatedQuestion = updatedQuestion.data[0];
+
+        const editAnswer = {
+            aid: currAns._id, 
+            comments: currAns.comments,
+            text: currAns.text,
+            votes: currAns.votes,
+            ans_by: currAns.ans_by,
+            ans_date_time: currAns.ans_date_time,
+            author_id: currAns.author_id,
+            qid: updatedQuestion._id
+        };
+
+
+        
+        let ans_id = await axios.post("http://localhost:8000/delete_answer", editAnswer);
+
+
+        updatedQuestion = await axios.get("http://localhost:8000/given_qid_get_qid/" + updatedQuestion._id);
+        
+        props.setQuestion(updatedQuestion.data[0]);
+        props.setClicked("AnswerPage");      
+    }
+
 
 
     return(
@@ -97,7 +127,8 @@ export default function EditAnswerPage(props){
         <label className="addAnswerPage_AnswerText">AnswerText*</label> 
         <textarea className="addAnswerPage_AnswerTextInput" id="addAnswerPage_AnswerTextInputID"  value={answerText} onChange={(e) => setAnswerText(e.target.value)} cols="20" rows="20" placeholder="Enter an answer"></textarea>
         <div className="addAnswerPage_footer">
-            <button type="submit" className="addAnswerPage_PostQuestionButton">Post Answer</button>
+            <button type="submit" className="addAnswerPage_PostQuestionButton">Edit Answer</button>
+            <button type="button" className= "deleteQuestion-Bottom__button" onClick={deleteAnswer}>Delete</button>
             <div className="addAnswerPage_MandatoryFields">{error}</div>
         </div>
     </form>

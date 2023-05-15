@@ -480,6 +480,7 @@ app.post('/edit_questions',async (req,res)=>{
   }
 });
 
+
 //given qid, delete questions, answers, comments associated with it
 app.post('/delete_question',async (req,res)=>{
   try{
@@ -500,10 +501,33 @@ app.post('/delete_question',async (req,res)=>{
       votes:data["votes"]
     };
 
+
     for(let i = 0; i < questions.answers.length; i++){
       let aid = questions.answers[i];
+      console.log(aid);
+
+      ans = await answerTable.find({_id: aid});
+
+      console.log("shibar");
+      console.log(ans);
+
+      let ansComments = ans[0].comments;
+
+      console.log(ansComments)
+
+      for(let i = 0; i < ansComments.length; i++){
+        let cid = ansComments[i];
+        await commentTable.deleteOne({"_id" : cid});
+      }  
+
+
+      //await commentTable.deleteOne({"_id" : cid});
+   
+      
       await answerTable.deleteOne({"_id" : aid});
     }
+
+
 
     for(let i = 0; i < questions.comments.length; i++){
       let cid = questions.comments[i];
@@ -511,6 +535,99 @@ app.post('/delete_question',async (req,res)=>{
     }
 
     console.log(await questionTable.deleteOne({"_id" : qid}));
+
+    let allQuestions = await questionTable.find({});
+    res.json(allQuestions);
+
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+
+// edit answer given answer object
+app.post('/edit_answer',async (req,res)=>{
+  try{
+    let data=req.body;
+    let aid = data['aid'];
+    let answers={
+      comments: data['comments'],
+      text: data['text'],
+      votes: data['votes'],
+      ans_by: data['ans_by'],
+      ans_date_time: data['ans_date_time'],
+      author_id: data['author_id']
+    };
+
+    const update = { $set: answers };
+    await answerTable.findOneAndUpdate({_id: aid}, update)
+
+    res.json(answers);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+//given a aid, get the qid
+app.get('/given_aid_get_qid/:aid',async (req,res)=>{
+  try{
+    let aid = req.params.aid;
+
+    let q = await questionTable.find({answers: aid});
+
+    res.json(q);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+
+// get updated question
+app.get('/given_qid_get_qid/:qid',async (req,res)=>{
+  try{
+    let qid = req.params.qid;
+
+    let q = await questionTable.find({_id: qid});
+
+    res.json(q);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+    return;
+  }
+});
+
+//given aid, delete its comments, remove aid from the question
+app.post('/delete_answer',async (req,res)=>{
+  try{
+    let data=req.body;
+    let aid = data['aid'];
+    let answers={
+      comments: data['comments'],
+      text: data['text'],
+      votes: data['votes'],
+      ans_by: data['ans_by'],
+      ans_date_time: data['ans_date_time'],
+      author_id: data['author_id'],
+      qid: data['qid']
+    };
+
+    for(let i = 0; i < answers.comments.length; i++){
+      let cid = answers.comments[i];
+      await commentTable.deleteOne({"_id" : cid});
+    }  
+
+    await questionTable.findOneAndUpdate(
+      { _id: answers.qid },
+      { $pull: { answers: aid } } );
+
+    await answerTable.deleteOne({"_id" : aid});
 
     let allQuestions = await questionTable.find({});
     res.json(allQuestions);

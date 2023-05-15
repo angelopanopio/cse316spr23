@@ -27,7 +27,7 @@ export default function Body(props) {
 
 
   const[isEditingAnswer, setIsEditingAnswer] = useState(false); // used to edit answer from user profile
-  const[answerToBeEdited, setAnswerToBeEdited] = useState(false);//answer that is being edited
+  const[answerToBeEdited, setAnswerToBeEdited] = useState();//answer that is being edited
 
   async function displayAllQuestions(){
     setQuestionList(null);
@@ -54,7 +54,7 @@ export default function Body(props) {
                                     setAllQuestionsTitle("");
                                     setClicked("TagsPage");
                                 }}>Tags</div>
-            {user && <div className="UserProfileLink" style={{backgroundColor: highlightUserProfile && "grey"}}  onClick={() => {
+            {user.username != "Guest" && <div className="UserProfileLink" style={{backgroundColor: highlightUserProfile && "grey"}}  onClick={() => {
                             setHighlightTags(false);
                             setHighlightQuestion(false);
                             setHighlightUserProfile(true);

@@ -9,16 +9,16 @@ import { set } from 'mongoose';
 
 
 export default function AnswersPage(props) {
-    const user = props.user;
+    let user = props.user;
     console.log("AnswersPage");
     const [allAnswers, setAllAnswers] = useState();
     const question = props.question;
     const [questionVotes, setQuestionVotes] = useState(question.votes);
 
     console.log(question);
-    console.log('http://localhost:8000/increaseView/' + question._id);
+    //console.log('http://localhost:8000/increaseView/' + question._id);
 
-        // next/prev
+
     console.log(allAnswers);
     const [highlightPrev, setHighlightPrev] = useState(true); 
     const [answer_page_arr, setAnswer_page_arr] = useState([]);
@@ -128,7 +128,7 @@ export default function AnswersPage(props) {
 
 
 
-            {answer_page_arr?.length > 0 && <ShowAnswers user={user} question={question} allAnswers={answer_page_arr[curr_answer_page_index]} 
+            {answer_page_arr?.length > 0 && <ShowAnswers user={props.user} question={props.question} setQuestion={props.setQuestion} allAnswers={answer_page_arr[curr_answer_page_index]}
             setAnswer_page_arr={setAnswer_page_arr} answer_page_arr={answer_page_arr} curr_answer_page_index={curr_answer_page_index} setClicked={props.setClicked}
             answerToBeEdited={props.answerToBeEdited} setAnswerToBeEdited={props.setAnswerToBeEdited} isEditingAnswer={props.isEditingAnswer} setIsEditingAnswer={props.setIsEditingAnswer} />}
             <div className = "answersPage_QuestionButtonAndPrevNextButton">
@@ -423,7 +423,7 @@ function ShowAnswers(props) {
     let arr = [];
     for(let i = 0; i < answersArr.length; i ++)
         {
-            arr.push(<ShowSingleAnswer user={props.user} currentAns={answersArr[i]} i = {i} key={answersArr[i]._id}  setClicked={props.setClicked}
+            arr.push(<ShowSingleAnswer user={props.user} currentAns={answersArr[i]} i = {i} key={answersArr[i]._id}  setClicked={props.setClicked} question={props.question} setQuestion={props.setQuestion}
             setAnswer_page_arr={props.setAnswer_page_arr} answer_page_arr={props.answer_page_arr} curr_answer_page_index={props.curr_answer_page_index}
             answerToBeEdited={props.answerToBeEdited} setAnswerToBeEdited={props.setAnswerToBeEdited} isEditingAnswer={props.isEditingAnswer} setIsEditingAnswer={props.setIsEditingAnswer}/>)
         }
@@ -433,6 +433,8 @@ function ShowAnswers(props) {
 
 function ShowSingleAnswer(props){   
     //console.log(props);
+    
+    console.log(props.question);
     let user = props.user;
     let currentAns = props.currentAns;
     let startTime = Date.now();
@@ -470,6 +472,8 @@ function ShowSingleAnswer(props){
                 {currentAns.author_id == user.userId && props.isEditingAnswer == true && <button className="editAnswerButton" onClick={() => {
                     props.setClicked("EditAnswerPage");
                     props.setAnswerToBeEdited(currentAns);
+                    console.log(props.question);
+                    props.setQuestion(props.question);
                 }}> Edit Answer</button>}
 
                     <div className="answersPage_AnswerAuthor">{currentAns.ans_by}</div>
