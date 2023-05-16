@@ -51,9 +51,13 @@ export default function EditTagPage(props){
             old_tag: currTag,
             new_tag: tagText
         })
-       
+       deleteTag(currTag);
     }   
-    async function deleteTag(){
+    async function deleteTag(tagToBeDeleted){
+        await axios.post("http://localhost:8000/delete_tag",{
+            tagToBeDeleted: tagToBeDeleted
+        })
+        props.setClicked("TagsPage");
     }
     return(
         <form className="AddAnswerPage_UsernameForm" id="AddAnswerPage_UsernameFormID" onSubmit={(e) => handleSubmit(e)}> 
@@ -61,7 +65,7 @@ export default function EditTagPage(props){
             <textarea className="addAnswerPage_AnswerTextInput" id="addAnswerPage_AnswerTextInputID"  value={tagText} onChange={(e) => setTagText(e.target.value)} cols="20" rows="10" placeholder="Enter a tag"></textarea>
             <div className="addAnswerPage_footer">
                 <button type="submit" className="addAnswerPage_PostQuestionButton">Edit Tag</button>
-                <button type="button" className= "deleteQuestion-Bottom__button" onClick={deleteTag}>Delete</button>
+                <button type="button" className= "deleteQuestion-Bottom__button" onClick={() => deleteTag(tagText)}>Delete</button>
                 <div className="addAnswerPage_MandatoryFields">{error}</div>
             </div>
         </form>

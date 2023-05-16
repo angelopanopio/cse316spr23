@@ -10,6 +10,7 @@ import { set } from 'mongoose';
 
 export default function AnswersPage(props) {
     let user = props.user;
+    let userId = user.userId;
     console.log("AnswersPage");
     const [allAnswers, setAllAnswers] = useState();
     const question = props.question;
@@ -38,7 +39,7 @@ export default function AnswersPage(props) {
     }, [allAnswers]);
 
     const [curr_answer_page_index, setCurr_answer_page_index] = useState(0);
-
+    console.log(userId);
     useEffect(() => {
         axios.get('http://localhost:8000/getAllAnswers')
         .then(function (response) {
@@ -258,10 +259,11 @@ function QuestionCommentsContainer(props){
     }
 
     async function handleNewComment(){
-
+        let userId = props.user.userId;
+        //console.log(userId);
         let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId );
         reputation = reputation.data[0].reputation;
-        console.log(reputation);
+        // console.log(reputation);
         if(reputation < 50)
         {
             let errMessage = "Your reputation is below 50";
@@ -270,7 +272,8 @@ function QuestionCommentsContainer(props){
         else {
             const newComment = {
                 comment_by: user.username, //implemnt username later
-                text : commentData
+                text : commentData,
+                author_id : userId
             };
 
             let comment_id = await axios.post("http://localhost:8000/comment_add_id", newComment);
@@ -561,7 +564,6 @@ function AnswerCommentsContainer(props){
     }
 
     async function handleNewComment(){
-
         let reputation = await axios.get("http://localhost:8000/getReputation/" + user.userId);
         reputation = reputation.data[0].reputation;
         console.log(reputation);

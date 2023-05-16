@@ -301,12 +301,14 @@ app.post('/getCommentArray', async (req, res) => {
 app.post('/comment_add_id', async(req,res)=>{
   try{
     let comment = req.body;
+    //console.log(comment);
     let date = new Date();
     //console.log(comment);
     let new_comment = new commentTable({
       comment_by: comment["comment_by"],
       text: comment["text"],
-      comment_date_time: date
+      comment_date_time: date,
+      author_id: comment["author_id"]
     });
     await new_comment.save();
     res.json(new_comment["_id"]);
@@ -923,6 +925,53 @@ app.post('/edit_question_tags', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.post('/delete_tag', async (req, res) => {
+  const tagToBeDeleted = req.body.tagToBeDeleted; // Assuming the tag name is sent in the request body
+  
+  try {
+    // Find the tag object to be deleted
+    const tag = await tagTable.findOne({ name: tagToBeDeleted });
+    if (!tag) {
+      return res.status(404).json({ error: 'Tag not found' });
+    }
+    
+    // Delete the tag from the questionTable
+    await questionTable.updateMany({ tags: tag._id }, { $pull: { tags: tag._id } });
+    
+    // Delete the tag object
+    await tagTable.deleteOne({ name: tagToBeDeleted });
+    
+    return res.status(200).json({ message: 'Tag deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/deleteUser', async (req, res) => {
+  try {
+    const userId = req.body.userId;
+
+    
+    // Delete answers
+    await answerTable.deleteMany({ author_id: userId });
+
+    // Delete comments
+    await commentTable.deleteMany({ author_id: userId });
+
+    // Delete questions
+    await questionTable.deleteMany({ author_id: userId });
+    
+    // Delete user
+    await userTable.deleteOne({ _id: userId });
+
+    res.status(200).json({ message: `User with ID ${userId} and associated data deleted successfully.` });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the user.' });
+  }
+});
+
 
 app.get("/logout", async (req, res) => {
   req.session.userId = null

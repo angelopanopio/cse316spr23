@@ -47,10 +47,11 @@ function tagCreate(name) {
   return tag.save();
 }
 
-function commentCreate(comment_by, text, votes, comment_date_time) {
+function commentCreate(comment_by, text, votes, comment_date_time, author_id) {
     let comment = new Comment({ 
         comment_by : comment_by,
         text : text,
+        author_id: author_id
     });
 
     if (votes != false) comment.votes = votes;
@@ -103,14 +104,14 @@ const populate = async () => {
   let t4 = await tagCreate('shared-preferences');
   let t5 = await tagCreate('css');
 
-  let c1 = await commentCreate(u2.username, 'testing', 5, false);
-  let c2 = await commentCreate(u3.username, 'noice', 1, false);
-  let c3 = await commentCreate(u4.username, 'pogchamp', false, false);
-  let c4 = await commentCreate(u2.username, 'poggers', false, false);
-  let c5 = await commentCreate(u3.username, 'good answer', false, false);
-  let c6 = await commentCreate(u4.username, 'bad answer', false, false);
-  let c7 = await commentCreate(u2.username, 'i like your answer', false, false);
-  let c8 = await commentCreate(u3.username, 'wowzers', false, false);
+  let c1 = await commentCreate(u2.username, 'testing', 5, false, u2);
+  let c2 = await commentCreate(u3.username, 'noice', 1, false, u3);
+  let c3 = await commentCreate(u4.username, 'pogchamp', false, false, u4);
+  let c4 = await commentCreate(u2.username, 'poggers', false, false, u2);
+  let c5 = await commentCreate(u3.username, 'good answer', false, false, u3);
+  let c6 = await commentCreate(u4.username, 'bad answer', false, false, u4);
+  let c7 = await commentCreate(u2.username, 'i like your answer', false, false, u2);
+  let c8 = await commentCreate(u3.username, 'wowzers', false, false, u3);
 
   let a1 = await answerCreate('React Router is mostly a wrapper around the history library. history handles interaction with the browser\'s window.history for you with its browser and hash histories. It also provides a memory history which is useful for environments that don\'t have a global history. This is particularly useful in mobile app development (react-native) and unit testing with Node.',
    u2.username, false, [c1, c2, c3, c4, c5], false, u2);

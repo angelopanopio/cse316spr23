@@ -43,6 +43,12 @@ export default function RegisterPage(props) {
             setError(errorMessage);
         }
     }
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleCreateNewUser(event);
+        }
+    }
     return (
         <div className='registerPage'>
         <form id="add-new-user" target="_blank" method="post">
@@ -52,15 +58,15 @@ export default function RegisterPage(props) {
             </div>
             <h1>Username</h1>
             <span>Should not be more than 15 characters.</span><br />
-            <input type="text" name="username" id="new-user-username" onChange={(e) => setUsername(e.target.value)}/><br /><br />
+            <input type="text" name="username" id="new-user-username" onKeyDown={handleKeyDown} onChange={(e) => setUsername(e.target.value)}/><br /><br />
             <h1>Email address</h1>
-            <input type="text" name="email" id="new-user-email" onChange={(e) => setEmail(e.target.value)}/><br /><br />
+            <input type="text" name="email" id="new-user-email" onKeyDown={handleKeyDown} onChange={(e) => setEmail(e.target.value)}/><br /><br />
             <h1>Password</h1>
             <span>Should not contain username or email ID.</span><br />
-            <input type="password" name="password" id="new-user-password" onChange={(e) => setPwd(e.target.value)}/><br /><br />
+            <input type="password" name="password" id="new-user-password" onKeyDown={handleKeyDown} onChange={(e) => setPwd(e.target.value)}/><br /><br />
 
             <h1>Confirm password</h1>
-            <input type="password" name="password-confirm" id="new-user-password-confirm"  onChange={(e) => setConfimPwd(e.target.value)}/><br /><br />
+            <input type="password" name="password-confirm" id="new-user-password-confirm"  onKeyDown={handleKeyDown} onChange={(e) => setConfimPwd(e.target.value)}/><br /><br />
 
             <button className="new-user-submit" onClick={(event) => handleCreateNewUser(event)} value="Create user">Submit</button>
         </form>

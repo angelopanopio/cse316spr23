@@ -21,6 +21,7 @@ const CommentSchema = new Schema({
         type: Date,
         default: Date.now()
     },
+    author_id: {type: Schema.Types.ObjectId, ref: "User" , required: true},
     url: String
     });
 

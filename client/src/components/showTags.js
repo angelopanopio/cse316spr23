@@ -110,7 +110,7 @@ function Tag(props) {
         else{
           userId = user
         }
-        console.log(user.userId);
+        // console.log(user.userId);
         axios.get('http://localhost:8000/getNonEditableUserTags/' + userId,{
             params:{
                 tags: tags
@@ -132,7 +132,6 @@ function Tag(props) {
     }
     
     const handleEdit = (name) => {
-      console.log(name);
       console.log(props.tagToBeEdited);
       setTagToBeEdited(name);
       setClicked("EditTagPage");
@@ -146,20 +145,19 @@ function Tag(props) {
         <div
           className="tagPage_TagName"
           onClick={isEditingTag ? () => {} : () => {
-            setAllQuestionsTitle(`Questions with tag "${name}"`);
-            setClicked("allQuestions");
-            setHighlightQuestion(null);
-            setHighlightTags([tid]);
-            setQuestionList(getArrQuestionsWithTag(props.questions, tid));
+            props.setQuestionList(getArrQuestionsWithTag(props.questions, props.tid))
+            props.setHighlightQuestion(true);
+            props.setHighlightTags(false);
+            props.setClicked("HomePage");
+            props.setAllQuestionsTitle(props.name);
           }}
         >
           {name}
         </div>
         <div className="tagPage_TagNum">{num} questions</div>
         {isEditingTag && editableTag.some(tag => tag.name === name) && (
-          <div className="tagPage_TagButtons">
-            <button onClick={() => handleEdit(name)}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
+          <div className="tagPage_TagButtonsDiv">
+            <button className="tagPage_TagButtons"onClick={() => handleEdit(name)}>Edit/Delete</button>
           </div>
         )}
       {isEditingTag && !editableTag.some(tag => tag.name === name) && (

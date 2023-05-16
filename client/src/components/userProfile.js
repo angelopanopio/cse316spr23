@@ -27,6 +27,9 @@ export default function UserProfile(props){
     const [clickedUserQuestionsAsked, setClickedUserQuestionsAsked] = useState([]);
     const [clickedUserQuestionsAnswered, setClickedUserQuestionsAnswered] = useState([]);
     const [clickedUserTags, setClickedUserTags] = useState([]);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [userIdToDelete, setUserIdToDelete] = useState('');
+    const [selectedUserInUserMap, setSelectedUserInUserMap] = useState('');
     let startTime = Date.now();
     //console.log(user);
     // on page load
@@ -154,7 +157,29 @@ export default function UserProfile(props){
         }); 
         
     }
-
+    async function handleDeleteUser(userId){
+      if (confirmDelete) {
+        try {
+          const response = await axios.post(`http://localhost:8000/deleteUser`, { userId });
+          console.log(response.data.message); // Success message from the server
+          setUserMap(prevUserMap => {
+            const updatedUserMap = { ...prevUserMap };
+            delete updatedUserMap[userId];
+            return updatedUserMap;
+          });
+        } catch (error) {
+          console.error('Error deleting user:', error.response.data.error);
+        }
+        setConfirmDelete(false);
+        setUserIdToDelete('');
+        setSelectedUserInUserMap('');
+      } else {
+        // Show the confirmation message and set the userIdToDelete
+        setConfirmDelete(true);
+        setUserIdToDelete(userId);
+        setSelectedUserInUserMap(userId);
+      }
+    }
     return (
       <div>    
         {!isAdmin && (
@@ -162,7 +187,8 @@ export default function UserProfile(props){
             <div className="userProfile_text"> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
             <div className="userProfile_text"> User Repuation: {userRep} </div>
             <div className="userProfile_text"> Questions Asked: </div>
-            {questionsAsked && (questionsAsked.length != 0 ? <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : "You did not ask any questions.")}
+            {questionsAsked && (questionsAsked.length != 0 ? <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : 
+            "You did not ask any questions.")}
 
             <div className="linkToQuestionsAnswered" onClick={() => {
               setquestionsAnsweredClicked(true);
@@ -182,14 +208,31 @@ export default function UserProfile(props){
         )}
         {isAdmin && clickedUser === null && (
           <div>
-              <div>User Register Date: {getMetaData(startTime, regDate, false).replace('ago', '').replace('asked','')}</div>
-              <div>User Reputation: {userRep}</div>
-              <div>User Map:</div>
-              <ul>
-                {Object.keys(userMap).map(userId => (
-                  <li key={userId} onClick={() => handleUserClick(userId)}>{userId}: {userMap[userId]}</li>
-                ))}
-              </ul>
+            <div className="userProfile_text">ADMIN PROFILE</div>
+            <div className="userProfile_text">User Register Date: {getMetaData(startTime, regDate, false).replace('ago', '').replace('asked','')}</div>
+            <div className="userProfile_text">User Reputation: {userRep}</div>
+            <div className="userProfile_text">User Map:</div>
+            {Object.keys(userMap).length === 0 ? (
+              <div className="userProfile_subtext">No users found.</div>
+            ) : (
+            <div className="userProfile_subtext">Click on user to view user page</div>
+            )}
+            <ul>
+              {Object.keys(userMap).map(userId => (
+              <li className="userProfile_usermap" key={userId}>
+                <span className={`userProfile_username ${selectedUserInUserMap === userId ? 'userProfile_username_selected' : ''}`} onClick={() => handleUserClick(userId)}>UserId: {userId} Username: {userMap[userId]}</span>
+                {confirmDelete && userIdToDelete === userId ? (
+                  <>
+                    <span className="userProfile_confirmDelete">Are you sure you want to delete this user?</span>
+                    <button className="userProfile_usermap_confirm" onClick={() => handleDeleteUser(userId)}>Confirm</button>
+                  </>
+                ) : (
+                  <button className="userProfile_usermap_delbutton" onClick={() => handleDeleteUser(userId)}>Delete</button>
+                )}
+              </li>
+              ))}
+            </ul>
+            
           </div>
         )}
         {isAdmin && clickedUser !== null && clickedUser !== user._id && (

@@ -35,12 +35,18 @@ export default function LoginPage(props) {
             setError(errorMessage);
         }
     }
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleLogin(event);
+        }
+    }
     return (
         <div className='loginPage'>
             <form id="login-Form" method="post">
             <button className = "return-to-welcomepage" onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
             <div className="login-Form-error-messages-container">
-                <span id = "login-Form-error-messages">{error}</span>
+                <span id="login-Form-error-messages">{error}</span>
             </div>
             <h1>Email address</h1>
             <input
@@ -51,21 +57,22 @@ export default function LoginPage(props) {
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 required
+                onKeyDown={handleKeyDown}
             ></input>
             <br /><br />
             <h1>Password</h1>
             <input
-                type={"password"}
+                type="password"
                 className="form_input"
                 id="password"
                 onChange={(e) => setPwd(e.target.value)}
                 value={pwd}
                 required
+                onKeyDown={handleKeyDown}
             ></input>
             <br /><br />
             <button className="loginbutton" type="submit" id="submit" value="Login" onClick={(event) => handleLogin(event)}>Login</button>
             </form>
         </div>
-        
     );
 }
