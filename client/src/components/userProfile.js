@@ -147,7 +147,7 @@ export default function UserProfile(props){
         
     }
 
-
+    console.log(props.tagToBeEdited);
     return (
       <div>    
         {!isAdmin && (
@@ -168,7 +168,8 @@ export default function UserProfile(props){
               setUserTagsClicked(true);
             }}>{'User Question Tags(Click to view)'}</div>
 
-            {userTagsClicked === true && userTags && (userTags !== 0 ? <UserTags user={user} userTags={userTags} questionList={questionList}setClicked={props.setClicked} 
+            {userTagsClicked === true && userTags && (userTags !== 0 ? <UserTags user={user} userTags={userTags} questionList={questionList} setClicked={props.setClicked} 
+            tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={props.setTagToBeEdited}
             setQuestion={props.setQuestion} />: "You do not have any tags with your questions.")}
           </div>
         )}
@@ -250,11 +251,11 @@ function UserAnswers(props){
 function UserTags(props){
   let userTags = props.userTags;
   let questionList = props.questionList;
-  console.log("BRUHUH");
-  console.log(userTags);
   return (
     <div>
-      <ShowTags user={props.user} tags={userTags} questions={questionList} isEditingTag={true}/>
+      <ShowTags user={props.user} tags={userTags} questions={questionList} isEditingTag={true} setClicked={props.setClicked} setQuestion={props.setQuestion} setAllQuestionsTitle={props.setAllQuestionsTitle}
+            setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}
+            tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={props.setTagToBeEdited}/>
     </div>
   )
 }

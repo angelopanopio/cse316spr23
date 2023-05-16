@@ -6,9 +6,9 @@ import { getNumQuestionsWithTag, getArrQuestionsWithTag } from './utils';
 export default function ShowTags(props){
     const tagArr = props.tags;
     const questions = props.questions;
-    const {isEditingTag = false, user = null} = props;
+    const {isEditingTag = false, user = null, setTagToBeEdited} = props;
+    setTagToBeEdited("TESTING");
     let outArr = [];
-
     let row = [];
     let rowNum = 0;
     let col = 0;
@@ -32,7 +32,7 @@ export default function ShowTags(props){
             if (col === 3){
                 
                 outArr.push(<TagRow key={rowNum} arr={row} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} setClicked={props.setClicked} setQuestion={props.setQuestion}
-                    setAllQuestionsTitle={props.setAllQuestionsTitle} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>)
+                    tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>)
 
                 col = 0;
                 row = [];
@@ -41,7 +41,7 @@ export default function ShowTags(props){
             
             else if (i === tagArr.length - 1){ //last tag
                 outArr.push(<TagRow key={rowNum} arr={row} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} setClicked={props.setClicked} setQuestion={props.setQuestion} 
-                    setAllQuestionsTitle={props.setAllQuestionsTitle} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>)
+                    tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>)
 
             }
 
@@ -57,11 +57,11 @@ export default function ShowTags(props){
 
 function TagRow(props){
     let tags = props.arr;
-    let {isEditingTag, user} = props;
+    let {isEditingTag, user, setTagToBeEdited} = props;
     //console.log(tags[0].tid);
     if(tags.length === 1 ){
         return(<div className="tagPage_TagRow">
-                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
                 <div className="tagPage_PlaceHolder"></div>
                 <div className="tagPage_PlaceHolder"></div>
@@ -72,9 +72,9 @@ function TagRow(props){
 
     if (tags.length === 2){
         return(<div className="tagPage_TagRow">
-                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
-                <Tag  key={tags[1].tid} tid={tags[1].tid} name={tags[1].name} num={tags[1].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[1].tid} tid={tags[1].tid} name={tags[1].name} num={tags[1].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
                 <div className="tagPage_PlaceHolder"></div>
                 </div>
@@ -84,11 +84,11 @@ function TagRow(props){
 
     if (tags.length === 3){
         return(<div className="tagPage_TagRow">
-                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[0].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[0].tid} name={tags[0].name} num={tags[0].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
-                <Tag  key={tags[1].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[1].tid} name={tags[1].name} num={tags[1].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[1].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[1].tid} name={tags[1].name} num={tags[1].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
-                <Tag  key={tags[2].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[2].tid} name={tags[2].name} num={tags[2].num} setAllQuestionsTitle={props.setAllQuestionsTitle}
+                <Tag  key={tags[2].tid} tags={props.tags} user={user} isEditingTag={isEditingTag} questions={props.questions} tid={tags[2].tid} name={tags[2].name} num={tags[2].num} tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={setTagToBeEdited} setAllQuestionsTitle={props.setAllQuestionsTitle}
                 setClicked={props.setClicked} setQuestion={props.setQuestion} setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>
                 </div>
 
@@ -98,28 +98,36 @@ function TagRow(props){
 }
 
 function Tag(props) {
-    const { tags, user, isEditingTag, tid, name, num, setAllQuestionsTitle, setClicked, setQuestion, setHighlightQuestion, setHighlightTags, setQuestionList } = props;
-    if(user) console.log(user.userId);
-    //console.log(tags);
+    const { tags, user, isEditingTag, tid, name, num, setAllQuestionsTitle, setTagToBeEdited, setClicked, setQuestion, setHighlightQuestion, setHighlightTags, setQuestionList } = props;
+    
+    const [editableTag, setEditableTag] = useState([]);
+    
     if(user && isEditingTag){
-        axios.get('http://localhost:8000/getEditableUserTags/' + user.userId,{
+        axios.get('http://localhost:8000/getNonEditableUserTags/' + user.userId,{
             params:{
                 tags: tags
             }
         })
         .then(response => {
             // handle the response data
-            const tags = response.data;
-            console.log(tags);
+            const nonEditabletags = response.data;
+            tags.filter(tag => !nonEditabletags.some(({ name }) => name === tag.name));
+            const nonEditabletagsSet = new Set(nonEditabletags);
+            
+           setEditableTag(tags.filter(tag => !nonEditabletagsSet.has(tag.name)));
+            
         })
         .catch(error => {
             // handle the error
-            console.error(error);
+            console.error(error); 
         });
     }
     
-    const handleEdit = () => {
-      // handle edit logic here
+    const handleEdit = (name) => {
+      console.log(name);
+      console.log(props.tagToBeEdited);
+      setTagToBeEdited(name);
+      setClicked("EditTagPage");
     };
   
     const handleDelete = () => {
@@ -141,13 +149,18 @@ function Tag(props) {
           {name}
         </div>
         <div className="tagPage_TagNum">{num} questions</div>
-        {isEditingTag && (
+        {isEditingTag && editableTag.some(tag => tag.name === name) && (
           <div className="tagPage_TagButtons">
-            <button onClick={handleEdit}>Edit</button>
+            <button onClick={() => handleEdit(name)}>Edit</button>
             <button onClick={handleDelete}>Delete</button>
           </div>
         )}
-      </div>
+      {isEditingTag && !editableTag.some(tag => tag.name === name) && (
+        <div className="tagPage_TagButtonsNonEditable">
+          Non-editable: Tag used by another user
+        </div>
+      )}
+  </div>
     );
   }
   

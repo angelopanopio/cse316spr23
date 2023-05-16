@@ -9,7 +9,7 @@ import { AskQuestionPage } from './askQuestion.js';
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import EditAnswerPage from './editAnswerPage.js';
-
+import EditTagPage from './editTagPage.js'
 //import { highlightQuestion, highlightTag } from './utils.js';
 
 
@@ -18,7 +18,7 @@ export default function Body(props) {
 
   let {user, questionList, setQuestionList, allQuestionsTitle, setAllQuestionsTitle, clicked, setClicked} = props;
 
-  console.log(user);
+  
   //questionList - used for what questions to show in the homepage
   const [question, setQuestion] = useState(); //state for changing question
   const [highlightTags, setHighlightTags] = useState(false); // state for highlighing Tags
@@ -29,12 +29,13 @@ export default function Body(props) {
   const[isEditingAnswer, setIsEditingAnswer] = useState(false); // used to edit answer from user profile
   const[answerToBeEdited, setAnswerToBeEdited] = useState();//answer that is being edited
 
+  const[tagToBeEdited,setTagToBeEdited]= useState();
+
   async function displayAllQuestions(){
     setQuestionList(null);
     const updatedQuestionList = await axios.get("http://localhost:8000/getAllQuestions");
     setQuestionList(updatedQuestionList.data);
   }
-
   return (
     <div className="body">
         <div className="leftMenu">
@@ -75,12 +76,13 @@ export default function Body(props) {
           {clicked === "AskQuestionPage" && <AskQuestionPage  user={user} setClicked={setClicked} 
           setQuestion={setQuestion} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList} />}
           {clicked === "TagsPage" && <TagsPage  user={user} setClicked={setClicked} setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
-          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags}/>}
+          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} tagToBeEdited={tagToBeEdited} setTagToBeEdited={setTagToBeEdited}/>}
 
           {clicked === "UserProfile" && <UserProfile  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion}
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
-          isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer}/>}
+          isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer}
+          tagToBeEdited={tagToBeEdited} setTagToBeEdited={setAnswerToBeEdited}/>}
 
           {clicked === "EditQuestionPage" && <EditQuestionPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
@@ -90,6 +92,11 @@ export default function Body(props) {
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
           answerToBeEdited={answerToBeEdited} setAnswerToBeEdited={setAnswerToBeEdited}/>}
+
+          {clicked === "EditTagPage" && <EditTagPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
+          setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
+          setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
+          tagToBeEdited={tagToBeEdited} setTagToBeEdited={setAnswerToBeEdited}/>}
         </div>}
     </div>
   );

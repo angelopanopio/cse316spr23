@@ -63,7 +63,7 @@ export default function LoginPage(props) {
                 required
             ></input>
             <br /><br />
-            <button className="loginbutton" type="submit" id="submit" value="Login" onClick={(event) => handleLogin(event)}>login</button>
+            <button className="loginbutton" type="submit" id="submit" value="Login" onClick={(event) => handleLogin(event)}>Login</button>
             </form>
         </div>
         

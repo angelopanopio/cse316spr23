@@ -869,7 +869,31 @@ app.get('/getUserTags/:userId', async (req, res) => {
   }
 });
 
+app.get('/getNonEditableUserTags/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const tagArr = req.query.tags;
 
+  try {
+    // extract tagids
+    const tagIds = await tagTable.find({ name: { $in: tagArr.map(tag => tag.name) } }).distinct('_id');
+    // return all questions with tagIds
+    const questions = await questionTable.find({ tags: { $in: tagIds } }).populate('tags');
+
+    //isolate non user questions
+    const nonUserQ = questions.filter(question => question.author_id.toString() !== userId.toString());
+    
+    const dupTags = new Set();
+    nonUserQ.forEach(question => {
+    question.tags.forEach(tag => {
+      dupTags.add(tag.name);
+    });
+    });
+    res.status(200).json(Array.from(dupTags));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 app.get("/logout", async (req, res) => {

@@ -39,7 +39,6 @@ export default function TagsPage(props){
 
     //console.log(tags);
 
-
     
     return(
         <div className="tagPage">
@@ -52,7 +51,8 @@ export default function TagsPage(props){
             </div>
 
             {tags && <ShowTags tags={tags} questions={questions} setClicked={props.setClicked} setQuestion={props.setQuestion} setAllQuestionsTitle={props.setAllQuestionsTitle}
-            setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList}/>}
+            setHighlightQuestion={props.setHighlightQuestion} setHighlightTags={props.setHighlightTags} setQuestionList={props.setQuestionList} 
+            tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={props.setTagToBeEdited}/>}
         </div> 
     )
 
