@@ -14,6 +14,13 @@ export default function EditTagPage(props){
         if(tagText === ""){
             errorMessage = "Tag field should not be empty";
         }
+        if(tagText.length > 10) {
+            errorMessage =
+                "Each tag cannot be more than 10 characters.";
+        }
+        if(tagText === currTag){
+            errorMessage = "Tag not edited!"
+        }
         if (errorMessage.length > 0) {
             // Display error message
             setError(errorMessage);
@@ -25,8 +32,27 @@ export default function EditTagPage(props){
         }
     }
     async function handleNewTag() {
+        const tagsTable = await axios.get("http://localhost:8000/getAllTags");
+        const tagsTableData = await tagsTable.data;
+        const tags = [];
 
-    }
+        const tag = tagsTableData.find((t) => t.name === tagText);
+        if(!tag){
+            //tag doenst exist, create a new tag
+            let newTag = await (
+                await axios.post("http://localhost:8000/update_tag", {
+                    tag_name: tagText.toLowerCase(),
+                })
+            ).data;
+            console.log(newTag);
+        }
+        //axios function replace all questions with old tag to have new tag
+        await axios.post("http://localhost:8000/edit_question_tags",{
+            old_tag: currTag,
+            new_tag: tagText
+        })
+       
+    }   
     async function deleteTag(){
     }
     return(

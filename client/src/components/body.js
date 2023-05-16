@@ -82,7 +82,7 @@ export default function Body(props) {
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}
           setHighlightQuestion={setHighlightQuestion} setHighlightTags={setHighlightTags} setHighlightUserProfile={setHighlightUserProfile}
           isEditingAnswer={isEditingAnswer} setIsEditingAnswer={setIsEditingAnswer}
-          tagToBeEdited={tagToBeEdited} setTagToBeEdited={setAnswerToBeEdited}/>}
+          tagToBeEdited={tagToBeEdited} setTagToBeEdited={setTagToBeEdited}/>}
 
           {clicked === "EditQuestionPage" && <EditQuestionPage  user={user} setClicked={setClicked} questions={question} setQuestion={setQuestion} 
           setAllQuestionsTitle={setAllQuestionsTitle} questionList={questionList} setQuestionList={setQuestionList}

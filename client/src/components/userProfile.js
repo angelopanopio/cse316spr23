@@ -26,7 +26,7 @@ export default function UserProfile(props){
     const [clickedUserRegDate, setClickedUserRegDate] = useState();
     const [clickedUserQuestionsAsked, setClickedUserQuestionsAsked] = useState([]);
     const [clickedUserQuestionsAnswered, setClickedUserQuestionsAnswered] = useState([]);
-
+    const [clickedUserTags, setClickedUserTags] = useState([]);
     let startTime = Date.now();
     //console.log(user);
     // on page load
@@ -63,11 +63,11 @@ export default function UserProfile(props){
             data.push(response.data[i][0]);
           }
 
-          console.log(data);
+          //console.log(data);
           data = Array.from(
             data.reduce((map, obj) => map.set(obj._id, obj), new Map()).values()
           );
-          console.log(data);
+          //console.log(data);
           setQuestionsAnswered(data);
         })
         .catch(function (error) {
@@ -144,10 +144,17 @@ export default function UserProfile(props){
         .catch(function (error) {
           console.log(error);
         });
+        axios.get('http://localhost:8000/getUserTags/' + userId)
+        .then(response => {
+          // console.log(response.data);
+          setClickedUserTags(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        }); 
         
     }
 
-    console.log(props.tagToBeEdited);
     return (
       <div>    
         {!isAdmin && (
@@ -199,7 +206,14 @@ export default function UserProfile(props){
 
                 {questionsAnsweredClicked === true && clickedUserQuestionsAnswered && (clickedUserQuestionsAnswered !== 0 ? <UserAnswers questionsAnswered={clickedUserQuestionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
                 setIsEditingAnswer={props.setIsEditingAnswer}/> : "You did not answer any questions.")}
-                <div>Your Tags: </div>
+            
+                <div className="linkToQuestionsAnswered" onClick={() => {
+                setUserTagsClicked(true);
+                }}>{'User Question Tags(Click to view)'}</div>
+
+                {userTagsClicked === true && clickedUserTags && (clickedUserTags !== 0 ? <UserTags user={clickedUser} userTags={clickedUserTags} questionList={questionList} setClicked={props.setClicked} 
+                tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={props.setTagToBeEdited}
+                setQuestion={props.setQuestion} />: "You do not have any tags with your questions.")}
             </div>
         )}
         </div>
@@ -251,6 +265,7 @@ function UserAnswers(props){
 function UserTags(props){
   let userTags = props.userTags;
   let questionList = props.questionList;
+  console.log(props.user);
   return (
     <div>
       <ShowTags user={props.user} tags={userTags} questions={questionList} isEditingTag={true} setClicked={props.setClicked} setQuestion={props.setQuestion} setAllQuestionsTitle={props.setAllQuestionsTitle}

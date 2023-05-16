@@ -6,8 +6,8 @@ import { getNumQuestionsWithTag, getArrQuestionsWithTag } from './utils';
 export default function ShowTags(props){
     const tagArr = props.tags;
     const questions = props.questions;
-    const {isEditingTag = false, user = null, setTagToBeEdited} = props;
-    setTagToBeEdited("TESTING");
+    const {isEditingTag = false, user, setTagToBeEdited} = props;
+    console.log(user);
     let outArr = [];
     let row = [];
     let rowNum = 0;
@@ -103,6 +103,7 @@ function Tag(props) {
     const [editableTag, setEditableTag] = useState([]);
     
     if(user && isEditingTag){
+        console.log(user.userId);
         axios.get('http://localhost:8000/getNonEditableUserTags/' + user.userId,{
             params:{
                 tags: tags
@@ -133,7 +134,6 @@ function Tag(props) {
     const handleDelete = () => {
       // handle delete logic here
     };
-
     return (
       <div className="tagPage_TagContainer">
         <div

@@ -895,12 +895,40 @@ app.get('/getNonEditableUserTags/:userId', async (req, res) => {
   }
 });
 
+app.post('/edit_question_tags', async (req, res) => {
+  const { old_tag, new_tag } = req.body;
+
+  try {
+    // Find the tag object with the old_tag name
+    const oldTag = await tagTable.findOne({ name: old_tag });
+    if (!oldTag) {
+      return res.status(404).json({ error: `Tag "${old_tag}" not found` });
+    }
+
+    // Find the tag object with the new_tag name
+    const newTag = await tagTable.findOne({ name: new_tag });
+    if (!newTag) {
+      return res.status(404).json({ error: `Tag "${new_tag}" not found` });
+    }
+
+    // Find all questions that have the oldTag and update their tags array
+    const result = await questionTable.updateMany(
+      { tags: oldTag._id },
+      { $set: { 'tags.$': newTag._id } }
+    );
+
+    res.json({ message: `${result.nModified} questions updated` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 app.get("/logout", async (req, res) => {
   req.session.userId = null
   req.session.username = null
   res.send("logged out")
-})
+});
 
 
 
