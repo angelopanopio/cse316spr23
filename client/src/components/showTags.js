@@ -7,7 +7,7 @@ export default function ShowTags(props){
     const tagArr = props.tags;
     const questions = props.questions;
     const {isEditingTag = false, user, setTagToBeEdited} = props;
-    console.log(user);
+    
     let outArr = [];
     let row = [];
     let rowNum = 0;
@@ -103,8 +103,15 @@ function Tag(props) {
     const [editableTag, setEditableTag] = useState([]);
     
     if(user && isEditingTag){
+        let userId = 0;
+        if(user.userId){
+          userId = user.userId
+        }
+        else{
+          userId = user
+        }
         console.log(user.userId);
-        axios.get('http://localhost:8000/getNonEditableUserTags/' + user.userId,{
+        axios.get('http://localhost:8000/getNonEditableUserTags/' + userId,{
             params:{
                 tags: tags
             }
