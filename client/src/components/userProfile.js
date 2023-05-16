@@ -98,7 +98,7 @@ export default function UserProfile(props){
         .catch(error => {
           console.error(error);
         });  
-        }, []);
+        }, [user.userId]);
 
     const handleUserClick = async (userId) => {
         setClickedUser(userId);
@@ -220,21 +220,19 @@ export default function UserProfile(props){
             <div className="userProfile_subtext">Click on user to view user page</div>
             )}
             <ul>
-              {Object.keys(userMap).map(userId => 
-                isAdmin && userId === user.userId ? null : (
-                  <li className="userProfile_usermap" key={userId}>
-                    <span className={`userProfile_username ${selectedUserInUserMap === userId ? 'userProfile_username_selected' : ''}`} onClick={() => handleUserClick(userId)}>UserId: {userId} Username: {userMap[userId]}</span>
-                    {confirmDelete && userIdToDelete === userId ? (
-                      <>
-                        <span className="userProfile_confirmDelete">Are you sure you want to delete this user?</span>
-                        <button className="userProfile_usermap_confirm" onClick={() => handleDeleteUser(userId)}>Confirm</button>
-                      </>
-                    ) : (
-                      <button className="userProfile_usermap_delbutton" onClick={() => handleDeleteUser(userId)}>Delete</button>
-                    )}
-                  </li>
-                )
-              )}
+              {Object.keys(userMap).map(userId => (
+              <li className="userProfile_usermap" key={userId}>
+                <span className={`userProfile_username ${selectedUserInUserMap === userId ? 'userProfile_username_selected' : ''}`} onClick={() => handleUserClick(userId)}>UserId: {userId} Username: {userMap[userId]}</span>
+                {confirmDelete && userIdToDelete === userId ? (
+                  <>
+                    <span className="userProfile_confirmDelete">Are you sure you want to delete this user?</span>
+                    <button className="userProfile_usermap_confirm" onClick={() => handleDeleteUser(userId)}>Confirm</button>
+                  </>
+                ) : (
+                  <button className="userProfile_usermap_delbutton" onClick={() => handleDeleteUser(userId)}>Delete</button>
+                )}
+              </li>
+              ))}
             </ul>
             
           </div>

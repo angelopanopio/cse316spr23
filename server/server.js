@@ -953,16 +953,24 @@ app.post('/deleteUser', async (req, res) => {
   try {
     const userId = req.body.userId;
 
-    
-    // Delete answers
+    // Delete answers and their associated comments
+    const answers = await answerTable.find({ author_id: userId });
+    for (const answer of answers) {
+      await commentTable.deleteMany({ _id: { $in: answer.comments } });
+    }
     await answerTable.deleteMany({ author_id: userId });
 
     // Delete comments
     await commentTable.deleteMany({ author_id: userId });
 
-    // Delete questions
+    // Delete questions, and their associated answers and comments
+    const questions = await questionTable.find({ author_id: userId });
+    for (const question of questions) {
+      await answerTable.deleteMany({ _id: { $in: question.answers } });
+      await commentTable.deleteMany({ _id: { $in: question.comments } });
+    }
     await questionTable.deleteMany({ author_id: userId });
-    
+
     // Delete user
     await userTable.deleteOne({ _id: userId });
 
@@ -972,6 +980,7 @@ app.post('/deleteUser', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while deleting the user.' });
   }
 });
+
 
 
 app.get("/logout", async (req, res) => {

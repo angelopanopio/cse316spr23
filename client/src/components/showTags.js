@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
 import { getNumQuestionsWithTag, getArrQuestionsWithTag } from './utils';
 
@@ -98,46 +98,42 @@ function TagRow(props){
 }
 
 function Tag(props) {
-    const { tags, user, isEditingTag, tid, name, num, setAllQuestionsTitle, setTagToBeEdited, setClicked, setQuestion, setHighlightQuestion, setHighlightTags, setQuestionList } = props;
-    
-    console.log(setAllQuestionsTitle);
-    console.log(setQuestion);
-    console.log(setHighlightQuestion);
-    console.log(setHighlightQuestion);
-    console.log(setHighlightTags);
-    console.log(setQuestionList);
-    console.log(tid);   
+    const { tags, user, isEditingTag, name, num, setTagToBeEdited, setClicked} = props;
+     
 
     const [editableTag, setEditableTag] = useState([]);
     
-    if(user && isEditingTag){
+    useEffect(() => {
+      if (user && isEditingTag) {
         let userId = 0;
-        if(user.userId){
-          userId = user.userId
+        if (user.userId) {
+          userId = user.userId;
+        } else {
+          userId = user;
         }
-        else{
-          userId = user
-        }
-        // console.log(user.userId);
-        axios.get('http://localhost:8000/getNonEditableUserTags/' + userId,{
-            params:{
-                tags: tags
-            }
-        })
-        .then(response => {
-            // handle the response data
+        axios
+          .get('http://localhost:8000/getNonEditableUserTags/' + userId, {
+            params: {
+              tags: tags,
+            },
+          })
+          .then((response) => {
             const nonEditabletags = response.data;
-            tags.filter(tag => !nonEditabletags.some(({ name }) => name === tag.name));
+            tags.filter(
+              (tag) => !nonEditabletags.some(({ name }) => name === tag.name)
+            );
             const nonEditabletagsSet = new Set(nonEditabletags);
-            
-           setEditableTag(tags.filter(tag => !nonEditabletagsSet.has(tag.name)));
-            
-        })
-        .catch(error => {
-            // handle the error
-            console.error(error); 
-        });
-    }
+    
+            setEditableTag(
+              tags.filter((tag) => !nonEditabletagsSet.has(tag.name))
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }, [user, isEditingTag, tags]);
+    
     
     const handleEdit = (name) => {
       console.log(props.tagToBeEdited);
