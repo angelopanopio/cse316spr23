@@ -15,3 +15,6 @@ Add design docs in *images/*
 - Added editing answers and questions on User Profile 
 
 ## Team Member 2 Contribution
+- Implement Welcome, Login and Register Page
+- Added Editing tags to User Profile
+- Added Admin view on User Profile
