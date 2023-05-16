@@ -952,33 +952,58 @@ app.post('/delete_tag', async (req, res) => {
 app.post('/deleteUser', async (req, res) => {
   try {
     const userId = req.body.userId;
-
-    // Delete answers and their associated comments
-    const answers = await answerTable.find({ author_id: userId });
-    for (const answer of answers) {
-      await commentTable.deleteMany({ _id: { $in: answer.comments } });
-    }
-    await answerTable.deleteMany({ author_id: userId });
-
-    // Delete comments
-    await commentTable.deleteMany({ author_id: userId });
-
-    // Delete questions, and their associated answers and comments
-    const questions = await questionTable.find({ author_id: userId });
+    
+    // Remove associated user answers and comments of questions 
+    const questions = await questionTable.find();
+    //console.log(questions);
     for (const question of questions) {
-      await answerTable.deleteMany({ _id: { $in: question.answers } });
-      await commentTable.deleteMany({ _id: { $in: question.comments } });
+      const updatedAnswers = [];
+      for (const answer of question.answers) {
+        const answerObj = await answerTable.findById(answer).exec();
+        const userObj = await userTable.findById(answerObj.author_id).exec();
+        if (userObj.id === userId) {
+          await commentTable.deleteMany({ _id: { $in: answer.comments } });
+        } else {
+          updatedAnswers.push(answer);
+        }
+      }
+      const updatedComments = [];
+      for (const comment of question.comments) {
+        const commentObj = await commentTable.findById(comment).exec();
+        const commentUserObj = await userTable.findById(commentObj.author_id).exec();
+        if (commentUserObj.id !== userId) {
+          updatedComments.push(comment);
+        }
+      }
+      question.answers = updatedAnswers;
+      question.comments = updatedComments;
+      await question.save();
+    }
+    // Remove associated user comments of answers 
+    const answers = await answerTable.find();
+    for (const answer of answers){
+      const updatedComments = [];
+      for (const comment of answer.comments) {
+        const commentObj = await commentTable.findById(comment).exec();
+        const commentUserObj = await userTable.findById(commentObj.author_id).exec();
+        if (commentUserObj.id !== userId) {
+          updatedComments.push(comment);
+        }
+      }
+      answer.comments = updatedComments;
+      await answer.save();
     }
     await questionTable.deleteMany({ author_id: userId });
-
-    // Delete user
+    await answerTable.deleteMany({ author_id: userId });
+    await commentTable.deleteMany({ author_id: userId });
     await userTable.deleteOne({ _id: userId });
-
+  
     res.status(200).json({ message: `User with ID ${userId} and associated data deleted successfully.` });
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ error: 'An error occurred while deleting the user.' });
   }
+  
 });
 
 
