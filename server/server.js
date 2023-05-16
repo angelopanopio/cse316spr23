@@ -682,7 +682,8 @@ app.post('/registerUser', async (req, res) => {
     const newUser = new userTable({
       username: req.body.username,
       password: req.body.password,
-      email: req.body.email
+      email: req.body.email,
+      register_date: new Date()
     });
     await newUser.save();
     res.sendStatus(200);

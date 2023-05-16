@@ -172,11 +172,13 @@ export default function UserProfile(props){
         setConfirmDelete(false);
         setUserIdToDelete('');
         setSelectedUserInUserMap('');
+        await axios.post("http://localhost:8000/refresh_tagTable");//delete tags that are not used by any questions 
       } else {
         // Show the confirmation message and set the userIdToDelete
         setConfirmDelete(true);
         setUserIdToDelete(userId);
         setSelectedUserInUserMap(userId);
+        await axios.post("http://localhost:8000/refresh_tagTable");//delete tags that are not used by any questions 
       }
     }
     console.log(user);
