@@ -44,8 +44,9 @@ export default function RegisterPage(props) {
         }
     }
     return (
+        <div className='registerPage'>
         <form id="add-new-user" target="_blank" method="post">
-            <button onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
+            <button className = "return-to-welcomepage" onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
             <div id="new-user" className="error-messages-container">
                 <span id="new-user-error-messages">{error}</span>
             </div>
@@ -61,8 +62,9 @@ export default function RegisterPage(props) {
             <h1>Confirm password</h1>
             <input type="password" name="password-confirm" id="new-user-password-confirm"  onChange={(e) => setConfimPwd(e.target.value)}/><br /><br />
 
-            <input type="button" id="new-user-submit" onClick={(event) => handleCreateNewUser(event)} value="Create user" />
+            <button className="new-user-submit" onClick={(event) => handleCreateNewUser(event)} value="Create user">Submit</button>
         </form>
+        </div>
 
     )
 }

@@ -14,12 +14,12 @@ export default function WelcomePage(props) {
         // setClicked("HomePage");
     }
     return (
-        <div>
+        <div className="welcome-page">
             <header>Welcome to Fake Stack Overflow!</header>
-            <div id="welcome-buttons">
-                <button onClick={() => setClicked("RegisterPage")}>Register</button>
-                <button onClick={() => setClicked("LoginPage")}>Login</button>
-                <button onClick={handleGuestLogin}>Continue as Guest</button>
+            <div className="welcome-buttons">
+                <button className="register-btn" onClick={() => setClicked("RegisterPage")}>Register</button>
+                <button className="login-btn" onClick={() => setClicked("LoginPage")}>Login</button>
+                <button className="guest-btn" onClick={handleGuestLogin}>Continue as Guest</button>
             </div>
         </div>
     );

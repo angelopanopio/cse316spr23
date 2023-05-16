@@ -254,7 +254,7 @@ function UserTags(props){
   console.log(userTags);
   return (
     <div>
-      <ShowTags user={props.user} tags={userTags} questions={questionList} showHeader={false}/>
+      <ShowTags user={props.user} tags={userTags} questions={questionList} isEditingTag={true}/>
     </div>
   )
 }

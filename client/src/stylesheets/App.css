@@ -646,3 +646,104 @@
     font-size: 2rem;
     color:red;
 }
+.welcome-page, .registerPage, .loginPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+.return-to-welcomepage{
+    background-color: #f5c064;
+}
+header {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+  
+.welcome-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.register-btn, .new-user-submit {
+background-color: #4caf50;
+}
+
+.login-btn, .loginbutton {
+background-color: #2196f3;
+}
+
+.guest-btn {
+background-color: #f44336;
+}
+
+button:hover {
+opacity: 0.8;
+}
+
+button:active {
+transform: translateY(1px);
+}
+.error-messages-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  #error-messages {
+    color: red;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  span {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: black;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  input[type="button"] {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 2rem;
+  }
+  
+  input[type="button"]:hover {
+    opacity: 0.8;
+  }
+  

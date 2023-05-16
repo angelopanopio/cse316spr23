@@ -36,13 +36,15 @@ export default function LoginPage(props) {
         }
     }
     return (
-        <form id="login-Form" method="post">
-            <button onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
+        <div className='loginPage'>
+            <form id="login-Form" method="post">
+            <button className = "return-to-welcomepage" onClick={() => setClicked("WelcomePage")}>Return to Welcome Page</button>
             <div className="login-Form-error-messages-container">
                 <span id = "login-Form-error-messages">{error}</span>
             </div>
             <h1>Email address</h1>
             <input
+                type="text"
                 className="form_input"
                 autoComplete="off"
                 id="email"
@@ -61,7 +63,9 @@ export default function LoginPage(props) {
                 required
             ></input>
             <br /><br />
-            <input type="submit" id="submit" value="Login" onClick={(event) => handleLogin(event)} />
-        </form>
+            <button className="loginbutton" type="submit" id="submit" value="Login" onClick={(event) => handleLogin(event)}>login</button>
+            </form>
+        </div>
+        
     );
 }
