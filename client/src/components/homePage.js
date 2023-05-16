@@ -96,7 +96,7 @@ export default function HomePage(props) {
     <div>
         <div className="questionsTop">
             <div className="allQuestionsTitle"> {props.allQuestionsTitle === "" ? "All Questions" : "Questions with " + props.allQuestionsTitle} </div>
-            {user.userId != 0 && <button className="askQuestionButton" onClick={ () => {
+            {user.userId !== 0 && <button className="askQuestionButton" onClick={ () => {
                                     props.setClicked("AskQuestionPage");
                                 }}> Ask Question</button>}
         </div>
@@ -114,12 +114,12 @@ export default function HomePage(props) {
         setIsEditingAnswer={props.setIsEditingAnswer} setClicked={props.setClicked} setQuestion={props.setQuestion}/>
         <div className="questionsPrevAndNextButton">
           <button className="questionsPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
-                                      if (curr_question_page_index == 0){
+                                      if (curr_question_page_index === 0){
                                         setHighlightPrev(true);
                                       }
                                       else 
                                       {
-                                        if (curr_question_page_index - 1 == 0){
+                                        if (curr_question_page_index - 1 === 0){
                                             setHighlightPrev(true)
                                         }
                                         else {
@@ -129,10 +129,10 @@ export default function HomePage(props) {
                                       }
                                   }}> Prev</button>
           <button className="questionsNextButton"  onClick={ () => {
-                                      if(question_page_arr.length == 0){
+                                      if(question_page_arr.length === 0){
                                         // do nothin
                                       }
-                                      else if (curr_question_page_index == question_page_arr.length - 1){
+                                      else if (curr_question_page_index === question_page_arr.length - 1){
                                         setCurr_question_page_index(0);
                                         setHighlightPrev(true);
                                       }

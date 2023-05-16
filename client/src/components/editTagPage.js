@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 
 import React from "react";
 import axios from "axios";
@@ -34,7 +34,7 @@ export default function EditTagPage(props){
     async function handleNewTag() {
         const tagsTable = await axios.get("http://localhost:8000/getAllTags");
         const tagsTableData = await tagsTable.data;
-        const tags = [];
+        //const tags = [];
 
         const tag = tagsTableData.find((t) => t.name === tagText);
         if(!tag){

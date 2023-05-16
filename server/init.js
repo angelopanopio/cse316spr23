@@ -3,6 +3,7 @@
 // Script should take admin credentials as arguments as described in the requirements doc.
 
 //Ex run: node init.js mongodb://127.0.0.1:27017/fake_so admin password
+// admin email will be admin + @gmail.com
 
 
 let userArgs = process.argv.slice(2);
@@ -93,7 +94,7 @@ function questionCreate(title, text, summary, tags, answers, comments, asked_by,
 }
 
 const populate = async () => {
-  let u1 = await userCreate(adminUser, adminPass, 'admin@gmail.com', true, 9999);
+  let u1 = await userCreate(adminUser, adminPass, adminUser + '@gmail.com', true, 9999);
   let u2 = await userCreate('jaden', 'password123', 'jadenw2542@gmail.com', false, 50);
   let u3 = await userCreate('burgerpants', 'randomstuff123', 'sally@gmail.com', false, 50);
   let u4 = await userCreate('tacoking', 'ilovetacos', 'taco@gmail.com', false, 50);
@@ -137,6 +138,10 @@ const populate = async () => {
   'center div', [t5], [a6], false, u2.username , false, false, 20, u2);
   await questionCreate('UseEffect usage', 'Can someone explain what useEffect does', 
   'help', [t1], [a7], [c8], u4.username , false, false, 20, u4);
+  await questionCreate('UseState Usage', 'Can someone explain what useState does', 
+  'help', [], [], [], u3.username , false, false, 5, u3);
+  await questionCreate('How to use MongoDB to connect to database', 'Can someone explain how to connect to db in Mongodb', 
+  'MongoDB', [], [], [], u2.username , false, false, 6, u2);
 
   if(db) db.close();
   console.log('done');

@@ -6,7 +6,7 @@ import AddAnswerPage from './addAnswerPage';
 import UserProfile from './userProfile.js';
 import EditQuestionPage from './editQuestionPage.js';
 import { AskQuestionPage } from './askQuestion.js';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import EditAnswerPage from './editAnswerPage.js';
 import EditTagPage from './editTagPage.js'
@@ -18,7 +18,6 @@ export default function Body(props) {
 
   let {user, questionList, setQuestionList, allQuestionsTitle, setAllQuestionsTitle, clicked, setClicked} = props;
 
-  
   //questionList - used for what questions to show in the homepage
   const [question, setQuestion] = useState(); //state for changing question
   const [highlightTags, setHighlightTags] = useState(false); // state for highlighing Tags
@@ -55,7 +54,7 @@ export default function Body(props) {
                                     setAllQuestionsTitle("");
                                     setClicked("TagsPage");
                                 }}>Tags</div>
-            {user.username != "Guest" && <div className="UserProfileLink" style={{backgroundColor: highlightUserProfile && "grey"}}  onClick={() => {
+            {user.username !== "Guest" && <div className="UserProfileLink" style={{backgroundColor: highlightUserProfile && "grey"}}  onClick={() => {
                             setHighlightTags(false);
                             setHighlightQuestion(false);
                             setHighlightUserProfile(true);

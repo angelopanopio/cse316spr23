@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+//import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchBar from './searchBar.js';
 
@@ -15,6 +15,9 @@ export default function Banner(props) {
     clicked,
     setClicked
   } = props;
+
+  console.log(setUserId);
+  console.log(isLoggedIn);
 
   //const [username, setUsername] = useState(user.username);
 

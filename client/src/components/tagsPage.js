@@ -3,7 +3,6 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { getNumQuestionsWithTag, getArrQuestionsWithTag } from './utils';
 import ShowTags from './showTags';
 export default function TagsPage(props){
     let user = props.user;
@@ -45,7 +44,7 @@ export default function TagsPage(props){
             <div className="tagPage_Header">
                 {tags && <div className="tagPage_NumOfTags">{ tags.length === 1 ? "1 Tag" : tags.length + " Tags"}</div> }
                 <div className="tagPage_AllTags">All Tags</div>
-                {user.userId != 0 && <button className="askQuestionButton" onClick={ () => {
+                {user.userId !== 0 && <button className="askQuestionButton" onClick={ () => {
                                     props.setClicked("AskQuestionPage");
                                 }}> Ask Question</button>}
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 
 import React from "react";
 import axios from "axios";
@@ -7,12 +7,13 @@ export default function EditAnswerPage(props){
 
     let currAns = props.answerToBeEdited;
     console.log(currAns);
-    let user = props.user;
     let [error, setError] = useState("* indicated mandatory fields");
     //let [userNameData, setUserNameData] = useState("");
     let [answerText, setAnswerText] = useState(currAns.text);
     let [question, setQuestion] = useState(props.question);
     console.log(question);
+
+    console.log(setQuestion);
     
     
 
@@ -86,14 +87,12 @@ export default function EditAnswerPage(props){
         //console.log(updatedQuestion);
 
         console.log(updatedQuestion.data[0]);
-        //console.log(ans_id);
+        console.log(ans_id);
         props.setQuestion(updatedQuestion.data[0]);
         props.setClicked("AnswerPage");
     }
 
     async function deleteAnswer(){
-        console.log("lol");
-        let aid = currAns._id
 
         let updatedQuestion = await axios.get("http://localhost:8000/given_aid_get_qid/" + currAns._id);
         updatedQuestion = updatedQuestion.data[0];
@@ -111,7 +110,7 @@ export default function EditAnswerPage(props){
 
 
         
-        let ans_id = await axios.post("http://localhost:8000/delete_answer", editAnswer);
+        await axios.post("http://localhost:8000/delete_answer", editAnswer);
 
 
         updatedQuestion = await axios.get("http://localhost:8000/given_qid_get_qid/" + updatedQuestion._id);

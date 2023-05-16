@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import axios from 'axios';
 import React from 'react';
 import getMetaData from "./utils";
-import EditQuestionPage from "./editQuestionPage";
 import ShowTags from "./showTags";
 
 export default function UserProfile(props){
@@ -187,21 +186,21 @@ export default function UserProfile(props){
             <div className="userProfile_text"> User Register Date: {getMetaData(startTime,regDate, false).replace('ago', '').replace('asked','')}</div>
             <div className="userProfile_text"> User Repuation: {userRep} </div>
             <div className="userProfile_text"> Questions Asked: </div>
-            {questionsAsked && (questionsAsked.length != 0 ? <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : 
+            {questionsAsked && (questionsAsked.length !== 0 ? <UserQuestions questionsAsked= {questionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : 
             "You did not ask any questions.")}
 
             <div className="linkToQuestionsAnswered" onClick={() => {
               setquestionsAnsweredClicked(true);
             }}>{'Questions that you Answered(Click to view)'}</div>
 
-            {questionsAnsweredClicked === true && questionsAnswered && (questionsAnswered !== 0 ? <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
+            {questionsAnsweredClicked === true && questionsAnswered && (questionsAnswered.length !== 0 ? <UserAnswers questionsAnswered={questionsAnswered} setClicked={props.setClicked} setQuestion={props.setQuestion} 
             setIsEditingAnswer={props.setIsEditingAnswer}/> : "You did not answer any questions.")}
             
             <div className="linkToQuestionsAnswered" onClick={() => {
               setUserTagsClicked(true);
             }}>{'User Question Tags(Click to view)'}</div>
 
-            {userTagsClicked === true && userTags && (userTags !== 0 ? <UserTags user={user} userTags={userTags} questionList={questionList} setClicked={props.setClicked} 
+            {userTagsClicked === true && userTags && (userTags.length !== 0 ? <UserTags user={user} userTags={userTags} questionList={questionList} setClicked={props.setClicked} 
             tagToBeEdited={props.tagToBeEdited} setTagToBeEdited={props.setTagToBeEdited}
             setQuestion={props.setQuestion} />: "You do not have any tags with your questions.")}
           </div>
@@ -241,7 +240,7 @@ export default function UserProfile(props){
                 <div className="userProfile_text"> User Register Date: {getMetaData(startTime, clickedUserRegDate, false).replace('ago', '').replace('asked','')}</div>
                 <div className="userProfile_text"> User Repuation: {clickedUserRep} </div>
                 <div className="userProfile_text"> Questions Asked: </div>
-                {clickedUserQuestionsAsked && (clickedUserQuestionsAsked.length != 0 ? <UserQuestions questionsAsked= {clickedUserQuestionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : "You did not ask any questions.")}
+                {clickedUserQuestionsAsked && (clickedUserQuestionsAsked.length !== 0 ? <UserQuestions questionsAsked= {clickedUserQuestionsAsked} setClicked={props.setClicked} setQuestion={props.setQuestion}/> : "You did not ask any questions.")}
 
                 <div className="linkToQuestionsAnswered" onClick={() => {
                   setquestionsAnsweredClicked(true);

@@ -13,9 +13,9 @@ export default function SearchBar(props) {
       } = props;
 
 
-    //console.log(questionList);
-    //console.log(allQuestionsTitle);
-    //console.log(clicked);
+    console.log(questionList);
+    console.log(allQuestionsTitle);
+    console.log(clicked);
 
     const [searchTerm, setSearchTerm] = useState(''); // state for searchbar
     const [questionTableData, setQuestionTableData] = useState([]);

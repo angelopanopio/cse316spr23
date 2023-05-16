@@ -5,7 +5,7 @@ import getMetaData from './utils.js';
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { getAnswersListNewest, getCommentNewest } from './utils.js';
-import { set } from 'mongoose';
+//import { set } from 'mongoose';
 
 
 export default function AnswersPage(props) {
@@ -46,14 +46,14 @@ export default function AnswersPage(props) {
           //console.log(response?.data);
           console.log(getAnswersListNewest(question, response?.data));
 
-          if (props.isEditingAnswer == true){
+          if (props.isEditingAnswer === true){
 
             let userAnsFirst = []
             let ans = getAnswersListNewest(question, response?.data);
             
             for (let i = 0; i < ans.length; i++ )
             {
-                if(ans[i].author_id == user.userId){
+                if(ans[i].author_id === user.userId){
                     userAnsFirst.unshift(ans[i]);
                 }
                 else{
@@ -100,7 +100,7 @@ export default function AnswersPage(props) {
             <div className="answersPage_Header">
                 <div className="answersPage_NumOfAnswers">{(question.answers.length) === 1? "1 Answer" : question.answers.length + " Answers"} </div>
                 <div className="answersPage_QuestionTitle">{question.title}</div>
-                {user.userId != 0 && <button className="askQuestionButton" onClick={() => {
+                {user.userId !== 0 && <button className="askQuestionButton" onClick={() => {
                                     props.setClicked("AskQuestionPage");
                                 }}>Ask Question</button>}
             </div>
@@ -133,18 +133,18 @@ export default function AnswersPage(props) {
             setAnswer_page_arr={setAnswer_page_arr} answer_page_arr={answer_page_arr} curr_answer_page_index={curr_answer_page_index} setClicked={props.setClicked}
             answerToBeEdited={props.answerToBeEdited} setAnswerToBeEdited={props.setAnswerToBeEdited} isEditingAnswer={props.isEditingAnswer} setIsEditingAnswer={props.setIsEditingAnswer} />}
             <div className = "answersPage_QuestionButtonAndPrevNextButton">
-                {user.userId != 0 && <button className="answersPage_AnswerQuestionButton"onClick={() => {
+                {user.userId !== 0 && <button className="answersPage_AnswerQuestionButton"onClick={() => {
                                         props.setClicked("AddAnswerPage");
                                         props.setQuestion(question);
                                     }}>Answer Question</button>}
 
                     <button className="answerPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
-                                                if (curr_answer_page_index == 0){
+                                                if (curr_answer_page_index === 0){
                                                     setHighlightPrev(true);
                                                 }
                                                 else 
                                                 {
-                                                    if (curr_answer_page_index - 1 == 0){
+                                                    if (curr_answer_page_index - 1 === 0){
                                                         setHighlightPrev(true)
                                                     }
                                                     else {
@@ -155,10 +155,10 @@ export default function AnswersPage(props) {
                                                 }
                                             }}> Prev</button>
                     <button className="answersNextButton"  onClick={ () => {
-                                                if(answer_page_arr.length == 0){
+                                                if(answer_page_arr.length === 0){
                                                 // do nothin
                                                 }
-                                                else if (curr_answer_page_index == answer_page_arr.length - 1){
+                                                else if (curr_answer_page_index === answer_page_arr.length - 1){
                                                     setCurr_answer_page_index(0);
                                                     setHighlightPrev(true);
                                                 }
@@ -175,7 +175,7 @@ export default function AnswersPage(props) {
 
     async function questionVote(num){
 
-        if(user.userId == 0)
+        if(user.userId === 0)
         {
             alert("Must be logged in to vote!")
         }
@@ -238,7 +238,7 @@ function QuestionCommentsContainer(props){
        
         let errMessage = "";
         
-        if (user.userId == 0)
+        if (user.userId === 0)
         {
             errMessage = "Must be logged in to comment";
             setError(errMessage);
@@ -247,7 +247,7 @@ function QuestionCommentsContainer(props){
             errMessage = "Max characters is 140";
             setError(errMessage);
         }
-        else if (commentData.trim().length == 0){
+        else if (commentData.trim().length === 0){
             errMessage = "Your comment should not be empty";
             setError(errMessage);
         }
@@ -293,7 +293,7 @@ function QuestionCommentsContainer(props){
     }
 
     function checkSubmit(e) {
-        if(e && e.keyCode == 13) {
+        if(e && e.keyCode === 13) {
            handleSubmit(e); 
         }
      }
@@ -308,12 +308,12 @@ function QuestionCommentsContainer(props){
                 <div className="answersPage_MandatoryFields">{error}</div>
             </form> 
             <button className="commentsPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
-                                if (curr_comment_page_index == 0){
+                                if (curr_comment_page_index === 0){
                                     setHighlightPrev(true);
                                 }
                                 else 
                                 {   
-                                    if (curr_comment_page_index - 1 == 0){
+                                    if (curr_comment_page_index - 1 === 0){
                                         setHighlightPrev(true)
                                     }
                                     else {
@@ -323,10 +323,10 @@ function QuestionCommentsContainer(props){
                                 }
                             }}> Prev</button>
             <button className="commentsNextButton"  onClick={ () => {
-                                if(comment_page_arr.length == 0){
+                                if(comment_page_arr.length === 0){
                                     // do nothin
                                     }
-                                else if (curr_comment_page_index == comment_page_arr.length - 1){
+                                else if (curr_comment_page_index === comment_page_arr.length - 1){
                                     setCurr_comment_page_index(0);
                                     setHighlightPrev(true);
                                 }
@@ -384,7 +384,7 @@ function QuestionSingleComment(props){
 
     async function commentVote(num){
 
-        if(user.userId == 0)
+        if(user.userId === 0)
         {
             alert("Must be logged in to vote!")
         }
@@ -448,7 +448,7 @@ function ShowSingleAnswer(props){
     //console.log(props.isEditingAnswer);
 
     async function answerVote(num){
-        if(user.userId == 0)
+        if(user.userId === 0)
         {
             alert("Must be logged in to vote!")
         }
@@ -472,7 +472,7 @@ function ShowSingleAnswer(props){
             <div className="answersPage_AnswerMetadata">
                 <div className="answersPage_AnswerMetadata">
 
-                {currentAns.author_id == user.userId && props.isEditingAnswer == true && <button className="editAnswerButton" onClick={() => {
+                {currentAns.author_id === user.userId && props.isEditingAnswer === true && <button className="editAnswerButton" onClick={() => {
                     props.setClicked("EditAnswerPage");
                     props.setAnswerToBeEdited(currentAns);
                     console.log(props.question);
@@ -544,7 +544,7 @@ function AnswerCommentsContainer(props){
        
         let errMessage = "";
         
-        if (user.userId == 0)
+        if (user.userId === 0)
         {
             errMessage = "Must be logged in to comment";
             setError(errMessage);
@@ -553,7 +553,7 @@ function AnswerCommentsContainer(props){
             errMessage = "Max characters is 140";
             setError(errMessage);
         }
-        else if (commentData.trim().length == 0){
+        else if (commentData.trim().length === 0){
             errMessage = "Your comment should not be empty";
             setError(errMessage);
         }
@@ -575,8 +575,10 @@ function AnswerCommentsContainer(props){
         else {
             const newComment = {
                 comment_by: user.username, //implemnt username later
-                text : commentData
+                text : commentData,
+                author_id: user.userId
             };
+            console.log(newComment);
 
             let comment_id = await axios.post("http://localhost:8000/comment_add_id", newComment);
             comment_id = comment_id.data;
@@ -597,7 +599,7 @@ function AnswerCommentsContainer(props){
     }
 
     function checkSubmit(e) {
-        if(e && e.keyCode == 13) {
+        if(e && e.keyCode === 13) {
            handleSubmit(e); 
         }
      }
@@ -612,12 +614,12 @@ function AnswerCommentsContainer(props){
                 <div className="answersPage_MandatoryFields">{error}</div>
             </form> 
             <button className="commentsPrevButton" style={{backgroundColor: highlightPrev && "grey"}} onClick={ () => {
-                                if (curr_comment_page_index == 0){
+                                if (curr_comment_page_index === 0){
                                     setHighlightPrev(true);
                                 }
                                 else 
                                 {   
-                                    if (curr_comment_page_index - 1 == 0){
+                                    if (curr_comment_page_index - 1 === 0){
                                         setHighlightPrev(true)
                                     }
                                     else {
@@ -627,10 +629,10 @@ function AnswerCommentsContainer(props){
                                 }
                             }}> Prev</button>
             <button className="commentsNextButton"  onClick={ () => {
-                                if(comment_page_arr.length == 0){
+                                if(comment_page_arr.length === 0){
                                     // do nothin
                                     }
-                                else if (curr_comment_page_index == comment_page_arr.length - 1){
+                                else if (curr_comment_page_index === comment_page_arr.length - 1){
                                     setCurr_comment_page_index(0);
                                     setHighlightPrev(true);
                                 }
@@ -684,7 +686,7 @@ function AnswerSingleComment(props){
 
     async function commentVote(num){
 
-        if(user.userId == 0)
+        if(user.userId === 0)
         {
             alert("Must be logged in to vote!")
         }

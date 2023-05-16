@@ -12,11 +12,9 @@ export default function EditQuestionPage(props){
     let [questionTextData, setQuestionTextData] = useState(questionToEdit.text);
     let [questionSummaryData, setQuestionSummaryData] = useState(questionToEdit.summary);
     let [questionTagsData, setQuestionTagsData] = useState('');
-    let [questionOriginalTags, setQuestionOriginalTags] = useState([]);
     
     //let [userNameData, setUserNameData] = useState("");
     let [error, setError] = useState("* indicated mandatory fields");
-
 
     useEffect(() => {
         let tags = questionToEdit.tags;
@@ -25,8 +23,7 @@ export default function EditQuestionPage(props){
             axios.get('http://localhost:8000/getTagBytid/' + tags[i])
             .then(function (response) {
             console.log(response?.data[0]);
-            setQuestionOriginalTags(tagName => [...tagName, response?.data[0]]);
-            setQuestionTagsData(tagName => tagName + (i != 0? ' ': '') + response?.data[0].name );
+            setQuestionTagsData(tagName => tagName + (i !== 0? ' ': '') + response?.data[0].name );
             })
             .catch(function (error) {
             console.log(error);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import { getNumQuestionsWithTag, getArrQuestionsWithTag } from './utils';
 
@@ -100,6 +100,14 @@ function TagRow(props){
 function Tag(props) {
     const { tags, user, isEditingTag, tid, name, num, setAllQuestionsTitle, setTagToBeEdited, setClicked, setQuestion, setHighlightQuestion, setHighlightTags, setQuestionList } = props;
     
+    console.log(setAllQuestionsTitle);
+    console.log(setQuestion);
+    console.log(setHighlightQuestion);
+    console.log(setHighlightQuestion);
+    console.log(setHighlightTags);
+    console.log(setQuestionList);
+    console.log(tid);   
+
     const [editableTag, setEditableTag] = useState([]);
     
     if(user && isEditingTag){
@@ -137,9 +145,9 @@ function Tag(props) {
       setClicked("EditTagPage");
     };
   
-    const handleDelete = () => {
+    //const handleDelete = () => {
       // handle delete logic here
-    };
+    //};
     return (
       <div className="tagPage_TagContainer">
         <div
