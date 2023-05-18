@@ -1,0 +1,9 @@
+final\final-project-angelo-jaden\server\init.js
+
+  97:7   error  'u1' is assigned a value but never used  no-unused-vars
+
+\final\final-project-angelo-jaden\server\server.js
+    5:5   error  'userArgs' is assigned a value but never used  no-unused-vars
+   44:7   error  'client' is assigned a value but never used    no-unused-vars
+   49:7   error  'tags' is assigned a value but never used      no-unused-vars
+   64:7   error  'server' is assigned a value but never used    no-unused-vars
